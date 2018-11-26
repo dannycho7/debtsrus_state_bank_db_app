@@ -1,8 +1,8 @@
-package models;
+package models.account;
 
 import java.sql.*;
 
-public class Account {
+abstract public class AccountBase {
 	public enum AccountType {
 		STUDENT_CHECKING("student_checking"),
 		INTEREST_CHECKING("interest_checking"),
@@ -16,14 +16,14 @@ public class Account {
 		}
 	}
 
-   private int account_id;
-   private int balance;
-   private boolean closed;
-   private String branch_name;
-   private AccountType acct_type;
-   private String customer_tax_id;
+   protected int account_id;
+   protected int balance;
+   protected boolean closed;
+   protected String branch_name;
+   protected AccountType acct_type;
+   protected String customer_tax_id;
 
-   Account(
+   AccountBase(
       int account_id,
       int balance,
       boolean closed,
@@ -39,7 +39,8 @@ public class Account {
       this.customer_tax_id = customer_tax_id;
    }
 
-   public static void create(
+   // returns: account_id
+   protected static int create(
       Connection conn,
       int balance, // $$ in cents
       String branch_name,
@@ -49,9 +50,12 @@ public class Account {
       Statement stmt = null;
       System.out.println("Creating statement...");
       stmt = conn.createStatement();
+
+      int account_id = (int) (Math.random() * Integer.MAX_VALUE); // low chance of collision
+
       String sql = String.format("INSERT INTO Account %s VALUES (%d, %d, %d, '%s', '%s', '%s')"
                   , "(account_id, balance, closed, branch_name, type, primary_owner)"
-                  , 1 // account_id
+                  , account_id
                   , balance
                   , 0 // closed
                   , branch_name
@@ -61,5 +65,7 @@ public class Account {
       System.out.println(sql);
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
+
+      return account_id;
    }
 }
