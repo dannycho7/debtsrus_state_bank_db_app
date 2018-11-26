@@ -1,5 +1,3 @@
-package accessors;
-
 import java.sql.*;
 
 public class JDBCConnectionManager {

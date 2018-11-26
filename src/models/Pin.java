@@ -1,4 +1,4 @@
-package accessors;
+package models;
 
 import java.sql.*;
 
