@@ -7,7 +7,7 @@ public class Bank {
 		Connection conn = null;
         try {
         	conn = JDBCConnectionManager.getConnection();
-			// Account.create(conn, 500, "Bank of America", Account.AccountType.STUDENT_CHECKING, "123456789");
+			Account.create(conn, 500, "Bank of America", Account.AccountType.STUDENT_CHECKING, "123456789");
 			// Pin.create(conn, "1717");
 			// Customer.create(conn, "123456789", "Danny Cho", "6681 Berkshire Terrace");
 		} catch(SQLException se) {

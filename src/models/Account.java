@@ -49,15 +49,16 @@ public class Account {
       Statement stmt = null;
       System.out.println("Creating statement...");
       stmt = conn.createStatement();
-      String sql = String.format("INSERT INTO Account %s VALUES (%d, %d, %d, %s, %s, %s)"
+      String sql = String.format("INSERT INTO Account %s VALUES (%d, %d, %d, '%s', '%s', '%s')"
                   , "(account_id, balance, closed, branch_name, type, primary_owner)"
                   , 1 // account_id
                   , balance
                   , 0 // closed
                   , branch_name
-                  , acct_type.name()
+                  , acct_type.name
                   , customer_tax_id
       );
+      System.out.println(sql);
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
    }
