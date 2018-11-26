@@ -16,34 +16,49 @@ public class Account {
 		}
 	}
 
-   public static void create(AccountType acct_type) {
-      Connection conn = null;
+   private int account_id;
+   private int balance;
+   private boolean closed;
+   private String branch_name;
+   private AccountType acct_type;
+   private String customer_tax_id;
+
+   Account(
+      int account_id,
+      int balance,
+      boolean closed,
+      String branch_name,
+      AccountType acct_type,
+      String customer_tax_id
+   ) {
+      this.account_id = account_id;
+      this.balance = balance;
+      this.closed = closed;
+      this.branch_name = branch_name;
+      this.acct_type = acct_type;
+      this.customer_tax_id = customer_tax_id;
+   }
+
+   public static void create(
+      Connection conn,
+      int balance, // $$ in cents
+      String branch_name,
+      AccountType acct_type,
+      String customer_tax_id
+   ) throws SQLException {
       Statement stmt = null;
-      try {
-         conn = JDBCConnectionManager.getConnection();
-         System.out.println("Creating statement...");
-         stmt = conn.createStatement();
-
-         String sql = "SELECT cid, cname, city, discount FROM cs174.Customers";
-         ResultSet rs = stmt.executeQuery(sql);
-         while (rs.next()) {
-            //Retrieve by column name
-            String cid  = rs.getString("cid");
-            String cname = rs.getString("cname");
-            String city = rs.getString("city");
-            double discount = rs.getDouble("discount");
-
-            System.out.print("cid: " + cid);
-            System.out.print(", cname: " + cname);
-            System.out.print(", city: " + city);
-            System.out.println(", discount: " + discount);
-         }
-         rs.close();
-      } catch(SQLException se) {
-         // Handle errors for JDBC
-         se.printStackTrace();
-      } finally {
-         JDBCConnectionManager.closeConnection(conn, stmt);
-      }
+      System.out.println("Creating statement...");
+      stmt = conn.createStatement();
+      String sql = String.format("INSERT INTO Account %s VALUES (%d, %d, %d, %s, %s, %s)"
+                  , "(account_id, balance, closed, branch_name, type, primary_owner)"
+                  , 1 // account_id
+                  , balance
+                  , 0 // closed
+                  , branch_name
+                  , acct_type.name()
+                  , customer_tax_id
+      );
+      int n = stmt.executeUpdate(sql);
+      System.out.println(n + " rows affected");
    }
 }
