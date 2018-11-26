@@ -1,5 +1,6 @@
+# debtsrus_state_bank_db_app
 
 To run the application type:
 ```bash
-java -cp .:ojdbc6.jar JDBCExample
+ant
 ```
