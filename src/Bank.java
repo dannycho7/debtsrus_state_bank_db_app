@@ -8,7 +8,8 @@ public class Bank {
         try {
         	conn = JDBCConnectionManager.getConnection();
 			// Account.create(conn, 500, "Bank of America", Account.AccountType.STUDENT_CHECKING, "123456789");
-			Pin.create(conn, "1717");
+			// Pin.create(conn, "1717");
+			// Customer.create(conn, "123456789", "Danny Cho", "6681 Berkshire Terrace");
 		} catch(SQLException se) {
          // Handle errors for JDBC
          se.printStackTrace();
