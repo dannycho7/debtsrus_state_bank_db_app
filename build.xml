@@ -1,7 +1,6 @@
 <project name="BankDB" basedir="." default="main">
 
     <property name="src.dir"     value="src"/>
-
     <property name="build.dir"   value="build"/>
     <property name="classes.dir" value="${build.dir}/classes"/>
     <property name="jar.dir"     value="${build.dir}/jar"/>
@@ -14,9 +13,7 @@
 
     <target name="compile">
         <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}">
-
-        </javac>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false"/>
     </target>
 
     <target name="jar" depends="compile">
