@@ -1,0 +1,4 @@
+INSERT INTO ACCOUNT_TYPE (name, interest_rate) VALUES ('student_checking', 0);
+INSERT INTO ACCOUNT_TYPE (name, interest_rate) VALUES ('interest_checking', 5.5);
+INSERT INTO ACCOUNT_TYPE (name, interest_rate) VALUES ('savings', 7.5);
+INSERT INTO ACCOUNT_TYPE (name, interest_rate) VALUES ('pocket', 0);

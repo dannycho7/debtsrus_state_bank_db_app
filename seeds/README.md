@@ -1,0 +1,1 @@
+This folder just contains a list of SQL commands that should be executed in the oracle db server.
