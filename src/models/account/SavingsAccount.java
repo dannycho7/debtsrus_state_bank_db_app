@@ -36,9 +36,8 @@ public class SavingsAccount extends AccountBase {
          customer_tax_id
       ); // creates account base
 
-      Statement stmt = null;
       System.out.println("Creating statement...");
-      stmt = conn.createStatement();
+      Statement stmt = conn.createStatement();
 
       String sql = String.format("INSERT INTO Check_savings_account %s VALUES (%d)"
                   , "(account_id)"

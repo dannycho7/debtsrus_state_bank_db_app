@@ -14,6 +14,10 @@ abstract public class AccountBase {
 		AccountType(String n) {
 			name = n;
 		}
+
+      protected String getName() {
+         return name;
+      }
 	}
 
    protected int account_id;
@@ -59,7 +63,7 @@ abstract public class AccountBase {
                   , balance
                   , 0 // closed
                   , branch_name
-                  , acct_type.name
+                  , acct_type.getName()
                   , customer_tax_id
       );
       System.out.println(sql);

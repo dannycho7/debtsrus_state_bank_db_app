@@ -1,10 +1,16 @@
 package models.account;
 
 import java.sql.*;
+import java.util.*;
 
 public class PocketAccount extends AccountBase{
 
    protected int linked_account_id;
+   public static Set<String> valid_linked_account_types = new HashSet<String>(Arrays.asList(
+      AccountType.STUDENT_CHECKING.getName(),
+      AccountType.INTEREST_CHECKING.getName(),
+      AccountType.SAVINGS.getName()
+   ));
 
    PocketAccount(
       int account_id,
@@ -19,6 +25,29 @@ public class PocketAccount extends AccountBase{
       this.linked_account_id = linked_account_id;
    }
 
+
+
+   private static boolean verifyLinkedAccountId(
+      Connection conn,
+      String customer_tax_id,
+      int linked_account_id
+   ) throws SQLException {
+      String sql = String.format("SELECT type FROM Account A " + 
+                                 "JOIN Account_ownership Ao ON Ao.account_id = A.account_id " +
+                                 "WHERE A.account_id='%s' AND A.tax_id = '%s' AND balance > 0"
+                  , linked_account_id
+                  , customer_tax_id);
+      Statement stmt = conn.createStatement();
+      ResultSet rs = stmt.executeQuery(sql);
+      while (rs.next()) {
+         String account_type = rs.getString("type");
+         if (valid_linked_account_types.contains(account_type)) {
+            return true;
+         }
+      }
+      return false;
+   }
+
    // returns: account_id
    public static int create(
       Connection conn,
@@ -26,18 +55,21 @@ public class PocketAccount extends AccountBase{
       String branch_name,
       String customer_tax_id,
       int linked_account_id
-   ) throws SQLException {
+   ) throws SQLException, IllegalArgumentException {
+      if (!verifyLinkedAccountId(conn, customer_tax_id, linked_account_id)) {
+         throw new IllegalArgumentException("Could not create pocket account");
+      }
+
       int account_id = AccountBase.create(
          conn,
          balance,
          branch_name,
-         AccountBase.AccountType.POCKET,
+         AccountType.POCKET,
          customer_tax_id
       ); // creates account base
 
-      Statement stmt = null;
       System.out.println("Creating statement...");
-      stmt = conn.createStatement();
+      Statement stmt = conn.createStatement();
 
       String sql = String.format("INSERT INTO Pocket_account %s VALUES (%d, '%s')"
                   , "(account_id, link)"
