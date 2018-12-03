@@ -18,10 +18,7 @@ public class Pin {
       Connection conn,
       String pin_no
    ) throws SQLException {
-      Statement stmt = null;
-      System.out.println("Creating statement...");
-      stmt = conn.createStatement();
-
+      Statement stmt = conn.createStatement();
       String sql = String.format("INSERT INTO Pin %s VALUES ('%s')"
                   , "(pin_no)"
                   , pin_no

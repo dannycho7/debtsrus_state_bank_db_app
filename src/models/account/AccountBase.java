@@ -51,10 +51,7 @@ abstract public class AccountBase {
       AccountType acct_type,
       String customer_tax_id
    ) throws SQLException {
-      Statement stmt = null;
-      System.out.println("Creating statement...");
-      stmt = conn.createStatement();
-
+      Statement stmt = conn.createStatement();
       int account_id = (int) (Math.random() * Integer.MAX_VALUE); // low chance of collision
 
       String sql = String.format("INSERT INTO Account %s VALUES (%d, %d, %d, '%s', '%s', '%s')"
@@ -66,7 +63,6 @@ abstract public class AccountBase {
                   , acct_type.getName()
                   , customer_tax_id
       );
-      System.out.println(sql);
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
 

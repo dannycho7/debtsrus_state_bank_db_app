@@ -26,10 +26,7 @@ public class Customer {
       String name,
       String address
    ) throws SQLException {
-      Statement stmt = null;
-      System.out.println("Creating statement...");
-      stmt = conn.createStatement();
-
+      Statement stmt = conn.createStatement();
       Pin.create(conn, "1717");
 
       String sql = String.format("INSERT INTO Customer %s VALUES ('%s', '%s', '%s', '%s')"
@@ -39,7 +36,6 @@ public class Customer {
                   , address
                   , "1717" // default pin
       );
-      System.out.println(sql);
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
    }

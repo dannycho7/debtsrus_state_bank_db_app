@@ -33,8 +33,8 @@ public class PocketAccount extends AccountBase{
       int linked_account_id
    ) throws SQLException {
       String sql = String.format("SELECT type FROM Account A " + 
-                                 "JOIN Account_ownership Ao ON Ao.account_id = A.account_id " +
-                                 "WHERE A.account_id='%s' AND A.tax_id = '%s' AND balance > 0"
+                                 "JOIN Account_ownership Ao ON A.account_id = Ao.account_id " +
+                                 "WHERE A.account_id='%s' AND Ao.tax_id = '%s' AND balance > 0"
                   , linked_account_id
                   , customer_tax_id);
       Statement stmt = conn.createStatement();
@@ -67,16 +67,12 @@ public class PocketAccount extends AccountBase{
          AccountType.POCKET,
          customer_tax_id
       ); // creates account base
-
-      System.out.println("Creating statement...");
       Statement stmt = conn.createStatement();
-
       String sql = String.format("INSERT INTO Pocket_account %s VALUES (%d, '%s')"
                   , "(account_id, link)"
                   , account_id
                   , linked_account_id
       );
-      System.out.println(sql);
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
 

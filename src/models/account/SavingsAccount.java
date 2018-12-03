@@ -35,15 +35,11 @@ public class SavingsAccount extends AccountBase {
          AccountBase.AccountType.SAVINGS,
          customer_tax_id
       ); // creates account base
-
-      System.out.println("Creating statement...");
       Statement stmt = conn.createStatement();
-
       String sql = String.format("INSERT INTO Check_savings_account %s VALUES (%d)"
                   , "(account_id)"
                   , account_id
       );
-      System.out.println(sql);
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
 
