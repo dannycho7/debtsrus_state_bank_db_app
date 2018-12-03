@@ -1,6 +1,7 @@
 package models.account;
 
 import java.sql.*;
+import models.transaction.*;
 
 abstract public class CheckSavingsAccountBase extends AccountBase {
     public enum CheckSavingsAccountType {
@@ -65,6 +66,14 @@ abstract public class CheckSavingsAccountBase extends AccountBase {
         );
         int n = stmt.executeUpdate(sql);
         System.out.println(n + " rows affected");
+        TransactionFactory.createDeposit(
+                conn,
+                balance, // amount (we deposit the starting balance)
+                0, // fee
+                customer_tax_id, // initiator is the creator of this account
+                account_id, // transactor
+                false // should_commit
+        );
         if (should_commit)
             conn.commit();
 
