@@ -26,14 +26,16 @@ public class InterestCheckingAccount extends AccountBase {
       Connection conn,
       int balance, // $$ in cents
       String branch_name,
-      String customer_tax_id
+      String customer_tax_id,
+      boolean should_commit
    ) throws SQLException {
       int account_id = AccountBase.create(
          conn,
          balance,
          branch_name,
          AccountBase.AccountType.INTEREST_CHECKING,
-         customer_tax_id
+         customer_tax_id,
+         false // should_commit
       ); // creates account base
 
       Statement stmt = conn.createStatement();
@@ -44,6 +46,8 @@ public class InterestCheckingAccount extends AccountBase {
       );
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
+      if (should_commit)
+         conn.commit();
 
       return account_id;
    }

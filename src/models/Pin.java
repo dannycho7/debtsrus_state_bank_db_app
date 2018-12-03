@@ -16,7 +16,8 @@ public class Pin {
 
    public static void create(
       Connection conn,
-      String pin_no
+      String pin_no,
+      boolean should_commit
    ) throws SQLException {
       Statement stmt = conn.createStatement();
       String sql = String.format("INSERT INTO Pin %s VALUES ('%s')"
@@ -25,5 +26,7 @@ public class Pin {
       );
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected.");
+      if (should_commit)
+         conn.commit();
    }
 }

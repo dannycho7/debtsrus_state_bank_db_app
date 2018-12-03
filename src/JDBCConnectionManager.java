@@ -16,6 +16,7 @@ public class JDBCConnectionManager {
          System.out.println("Connecting to a selected database...");
          conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
          System.out.println("Connected database successfully...");
+         conn.setAutoCommit(false);
       } catch(SQLException se) {
          // Handle errors for JDBC
          se.printStackTrace();
@@ -28,7 +29,7 @@ public class JDBCConnectionManager {
 
    public static void closeConnection(Connection conn, Statement stmt) {
       try{
-         if(stmt!=null)
+         if (stmt!=null)
             conn.close();
       } catch(SQLException se){} // do nothing
       try {
@@ -36,6 +37,14 @@ public class JDBCConnectionManager {
             conn.close();
       } catch (SQLException se) {
          se.printStackTrace();
+      }
+   }
+
+   public static void rollbackConn(Connection conn) {
+      try {
+         conn.rollback();
+      } catch (SQLException ex) {
+         ex.printStackTrace();
       }
    }
 }

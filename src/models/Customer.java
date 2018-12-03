@@ -25,12 +25,14 @@ public class Customer {
       String tax_id,
       String name,
       String address,
-      String pin
+      String pin,
+      boolean should_commit
    ) throws SQLException {
       Statement stmt = conn.createStatement();
       Pin.create(
               conn,
-              pin
+              pin,
+              false // should_commit
       );
 
       String sql = String.format("INSERT INTO Customer %s VALUES ('%s', '%s', '%s', '%s')"
@@ -42,5 +44,7 @@ public class Customer {
       );
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
+      if (should_commit)
+         conn.commit();
    }
 }

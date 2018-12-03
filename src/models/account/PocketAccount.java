@@ -54,18 +54,19 @@ public class PocketAccount extends AccountBase{
       int balance, // $$ in cents
       String branch_name,
       String customer_tax_id,
-      int linked_account_id
+      int linked_account_id,
+      boolean should_commit
    ) throws SQLException, IllegalArgumentException {
       if (!verifyLinkedAccountId(conn, customer_tax_id, linked_account_id)) {
-         throw new IllegalArgumentException("Could not create pocket account");
+         throw new SQLException("Could not create pocket account");
       }
-
       int account_id = AccountBase.create(
          conn,
          balance,
          branch_name,
          AccountType.POCKET,
-         customer_tax_id
+         customer_tax_id,
+         false // should_commit
       ); // creates account base
       Statement stmt = conn.createStatement();
       String sql = String.format("INSERT INTO Pocket_account %s VALUES (%d, '%s')"
@@ -75,6 +76,8 @@ public class PocketAccount extends AccountBase{
       );
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
+      if (should_commit)
+         conn.commit();
 
       return account_id;
    }

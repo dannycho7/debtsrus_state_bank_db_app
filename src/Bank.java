@@ -8,15 +8,15 @@ public class Bank {
 		Connection conn = null;
         try {
         	conn = JDBCConnectionManager.getConnection();
-			PocketAccount.create(conn, 500, "Bank of America", "123456789", 1527885980);
-			// Pin.create(conn, "1717");
-			// Customer.create(conn, "123456789", "Danny Cho", "6681 Berkshire Terrace");
+			Customer.create(conn, "123456310", "Danny Cho", "6681 Berkshire Terrace", "1010", false);
+			int account_id = SavingsAccount.create(conn, 500, "Bank of America", "123456310", false);
+        	PocketAccount.create(conn, 500, "Bank of America", "123456310", account_id, false);
+			conn.commit();
 		} catch (SQLException se) {
-         // Handle errors for JDBC
-         se.printStackTrace();
-      	} 
-      	catch (IllegalArgumentException ex) {
-      		ex.printStackTrace();
+			// Handle errors for JDBC
+			if (conn != null)
+				JDBCConnectionManager.rollbackConn(conn);
+			se.printStackTrace();
       	} finally {
 			JDBCConnectionManager.closeConnection(
 				conn,

@@ -49,7 +49,8 @@ abstract public class AccountBase {
       int balance, // $$ in cents
       String branch_name,
       AccountType acct_type,
-      String customer_tax_id
+      String customer_tax_id,
+      boolean should_commit
    ) throws SQLException {
       Statement stmt = conn.createStatement();
       int account_id = (int) (Math.random() * Integer.MAX_VALUE); // low chance of collision
@@ -65,6 +66,8 @@ abstract public class AccountBase {
       );
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
+      if (should_commit)
+          conn.commit();
 
       return account_id;
    }
