@@ -1,5 +1,6 @@
 package models.transaction;
 
+import BankUtil.*;
 import java.sql.*;
 
 public class CheckTransaction extends TransactionBase {
@@ -55,7 +56,7 @@ public class CheckTransaction extends TransactionBase {
             CheckTransactionType type,
             boolean should_commit
     ) throws SQLException {
-        int check_no = (int) (Math.random() * Integer.MAX_VALUE); // low chance of collision
+        int check_no = BankUtil.getUUID();
         int t_id = TransactionBase.create(
                 conn,
                 amount,

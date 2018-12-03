@@ -1,5 +1,6 @@
 package models.transaction;
 
+import BankUtil.*;
 import java.sql.*;
 
 abstract public class TransactionBase {
@@ -63,7 +64,7 @@ abstract public class TransactionBase {
             TransactionType type,
             boolean should_commit
     ) throws SQLException {
-        int t_id = (int) (Math.random() * Integer.MAX_VALUE); // low chance of collision
+        int t_id = BankUtil.getUUID();
         Statement stmt = conn.createStatement();
         String sql = String.format("INSERT INTO Transaction %s VALUES ('%d', '%d', '%s', '%d', '%s', '%d', '%s')"
                 , "(t_id, amount, timestamp, fee, initiator, transactor, type)"

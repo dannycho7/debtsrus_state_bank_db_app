@@ -1,5 +1,6 @@
 package models.account;
 
+import BankUtil.*;
 import java.sql.*;
 
 abstract public class AccountBase {
@@ -53,7 +54,7 @@ abstract public class AccountBase {
       boolean should_commit
    ) throws SQLException {
       Statement stmt = conn.createStatement();
-      int account_id = (int) (Math.random() * Integer.MAX_VALUE); // low chance of collision
+      int account_id = BankUtil.getUUID();
 
       String sql = String.format("INSERT INTO Account %s VALUES (%d, %d, %d, '%s', '%s', '%s')"
                   , "(account_id, balance, closed, branch_name, type, primary_owner)"
