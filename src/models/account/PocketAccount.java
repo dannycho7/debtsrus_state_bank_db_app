@@ -3,7 +3,7 @@ package models.account;
 import java.sql.*;
 import java.util.*;
 
-public class PocketAccount extends AccountBase{
+public class PocketAccount extends AccountBase {
 
    protected int linked_account_id;
    public static Set<String> valid_linked_account_types = new HashSet<String>(Arrays.asList(

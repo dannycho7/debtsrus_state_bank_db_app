@@ -2,7 +2,7 @@ package models.account;
 
 import java.sql.*;
 
-public class SavingsAccount extends AccountBase {
+public class SavingsAccount extends CheckSavingsAccountBase {
    SavingsAccount(
       int account_id,
       int balance,
@@ -29,21 +29,14 @@ public class SavingsAccount extends AccountBase {
       String customer_tax_id,
       boolean should_commit
    ) throws SQLException {
-      int account_id = AccountBase.create(
-         conn,
-         balance,
-         branch_name,
-         AccountBase.AccountType.SAVINGS,
-         customer_tax_id,
-         false // should_commit
+      int account_id = CheckSavingsAccountBase.create(
+              conn,
+              balance,
+              branch_name,
+              CheckSavingsAccountBase.CheckSavingsAccountType.SAVINGS,
+              customer_tax_id,
+              false // should_commit
       ); // creates account base
-      Statement stmt = conn.createStatement();
-      String sql = String.format("INSERT INTO Check_savings_account %s VALUES (%d)"
-                  , "(account_id)"
-                  , account_id
-      );
-      int n = stmt.executeUpdate(sql);
-      System.out.println(n + " rows affected");
       if (should_commit)
          conn.commit();
       return account_id;
