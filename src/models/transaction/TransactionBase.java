@@ -66,11 +66,11 @@ abstract public class TransactionBase {
     ) throws SQLException {
         int t_id = BankUtil.getUUID();
         Statement stmt = conn.createStatement();
-        String sql = String.format("INSERT INTO Transaction %s VALUES ('%d', '%d', '%s', '%d', '%s', '%d', '%s')"
+        String sql = String.format("INSERT INTO Transaction %s VALUES ('%d', '%d', %s, '%d', '%s', '%d', '%s')"
                 , "(t_id, amount, timestamp, fee, initiator, transactor, type)"
                 , t_id
                 , amount
-                , timestamp
+                , String.format("TO_DATE('%s', 'YYYY-MM-DD')", timestamp)
                 , fee
                 , initiator
                 , transactor
