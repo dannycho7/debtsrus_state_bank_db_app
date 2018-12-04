@@ -2,6 +2,7 @@ package models.account;
 
 import bank_util.*;
 import java.sql.*;
+import models.Customer;
 
 public class AccountBase {
 	public enum AccountType {
@@ -100,6 +101,22 @@ public class AccountBase {
       );
       if (should_commit)
           conn.commit();
+   }
+
+   public static void deleteClosedAccounts(
+           Connection conn,
+           boolean should_commit
+   ) throws SQLException {
+       String delete_accounts_sql = "DELETE FROM Account A WHERE A.closed = 1";
+       Statement stmt = conn.createStatement();
+       int n = stmt.executeUpdate(delete_accounts_sql);
+       System.out.println(n + " rows deleted");
+       Customer.deleteAllWithNoAccounts(
+               conn,
+               false // should_commit
+       );
+       if (should_commit)
+           conn.commit();
    }
 
    public int getAccountId() {

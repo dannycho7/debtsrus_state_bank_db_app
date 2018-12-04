@@ -50,6 +50,21 @@ public class Customer {
          conn.commit();
    }
 
+   public static void deleteAllWithNoAccounts(
+           Connection conn,
+           boolean should_commit
+   ) throws SQLException {
+      String no_accounts_sql = "SELECT Ao.tax_id FROM Account_ownership Ao GROUP BY Ao.tax_id HAVING COUNT(*) = 0";
+      String delete_customers_sql = String.format("DELETE FROM Customer C" +
+                      "WHERE C.tax_id IN (%s)"
+              , no_accounts_sql
+      );
+      Statement stmt = conn.createStatement();
+      int n = stmt.executeUpdate(delete_customers_sql);
+      System.out.println(n + " rows deleted");
+      if (should_commit)
+         conn.commit();
+   }
 
    public static Customer find(
            Connection conn,
