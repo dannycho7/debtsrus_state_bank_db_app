@@ -42,6 +42,21 @@ abstract public class AccountBase {
       this.customer_tax_id = customer_tax_id;
    }
 
+   private static void createAccountOwnership(
+           Connection conn,
+           String customer_tax_id,
+           int account_id
+   ) throws SQLException {
+       Statement stmt = conn.createStatement();
+       String sql = String.format("INSERT INTO Account_ownership %s VALUES ('%s', %d)"
+               , "(tax_id, account_id)"
+               , customer_tax_id
+               , account_id
+       );
+       int n = stmt.executeUpdate(sql);
+       System.out.println(n + " rows affected");
+   }
+
    // returns: account_id
    protected static int create(
       Connection conn,
@@ -65,6 +80,11 @@ abstract public class AccountBase {
       );
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
+      AccountBase.createAccountOwnership(
+              conn,
+              customer_tax_id,
+              account_id
+      );
       if (should_commit)
           conn.commit();
 
