@@ -76,4 +76,17 @@ public class Customer {
 
       throw new IllegalArgumentException(String.format("Could not find Customer %s", customer_tax_id));
    }
+
+   public String getTaxId() {
+      return tax_id;
+   }
+   public String getName() {
+      return name;
+   }
+   public String getAddress() {
+      return address;
+   }
+   public String getPin() {
+      return pin;
+   }
 }

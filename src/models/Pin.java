@@ -29,4 +29,11 @@ public class Pin {
       if (should_commit)
          conn.commit();
    }
+
+   public String getPinNo() {
+      return pin_no;
+   }
+   public String getCustomerTaxId() {
+      return customer_tax_id;
+   }
 }

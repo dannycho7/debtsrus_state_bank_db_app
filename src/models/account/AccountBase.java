@@ -104,4 +104,23 @@ abstract public class AccountBase {
 
       return account_id;
    }
+
+   public int getAccountId() {
+       return account_id;
+   }
+   public int getBalance() {
+       return balance;
+   }
+   public boolean isClosed() {
+       return closed;
+   }
+   public String getBranchName() {
+       return branch_name;
+   }
+   public AccountType getAccountType() {
+       return acct_type;
+   }
+   public String getCustomerTaxId() {
+       return customer_tax_id;
+   }
 }

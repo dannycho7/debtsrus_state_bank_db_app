@@ -115,4 +115,8 @@ public class PocketAccount extends AccountBase {
 
        throw new IllegalArgumentException(String.format("Could not find PocketAccount %s", account_id));
    }
+
+   public int getLinkedAccountId() {
+       return linked_account_id;
+   }
 }

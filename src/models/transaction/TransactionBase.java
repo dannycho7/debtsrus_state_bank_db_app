@@ -82,4 +82,26 @@ abstract public class TransactionBase {
             conn.commit();
         return t_id;
     }
+
+    public int getTId() {
+        return t_id;
+    }
+    public int getAmount() {
+        return amount;
+    }
+    public String getTimestamp() {
+        return timestamp;
+    }
+    public int getFee() {
+        return fee;
+    }
+    public String getInitiator() {
+        return initiator;
+    }
+    public int getTransactor() {
+        return transactor;
+    }
+    public TransactionType getTransactionType() {
+        return type;
+    }
 }

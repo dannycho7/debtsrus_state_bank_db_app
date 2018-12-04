@@ -75,4 +75,8 @@ public class UnaryTransaction extends TransactionBase {
 
         return t_id;
     }
+
+    public UnaryTransactionType getUnaryTransactionType() {
+        return unary_type;
+    }
 }

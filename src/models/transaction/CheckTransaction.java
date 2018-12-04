@@ -75,4 +75,8 @@ public class CheckTransaction extends TransactionBase {
 
         return t_id;
     }
+
+    public CheckTransactionType getCheckTransactionType() {
+        return check_type;
+    }
 }

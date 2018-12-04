@@ -78,4 +78,8 @@ public class BinaryTransaction extends TransactionBase {
 
         return t_id;
     }
+
+    public BinaryTransactionType getBinaryTransactionType() {
+        return binary_type;
+    }
 }
