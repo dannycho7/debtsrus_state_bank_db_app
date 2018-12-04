@@ -149,4 +149,60 @@ public class TransactionFactory {
 
         return t_id;
     }
+
+    public static int createTransfer(
+            Connection conn,
+            int amount,
+            String initiator, // customer tax_id
+            int transactor, // pocket account_id
+            int operand, // account_id
+            boolean should_commit
+    ) throws SQLException, IllegalArgumentException {
+        if (amount > 2000 * 100) {
+            throw new IllegalArgumentException("Amount transferred cannot exceed $2000");
+        }
+        CheckSavingsAccountBase transactor_account = CheckSavingsAccountBase.findOpen(conn, transactor);
+        if (!transactor_account.hasOwner(conn, initiator)) {
+            String err_msg = String.format("The initiator %s does not own the transactor account %d"
+                    , initiator
+                    , transactor
+            );
+            throw new IllegalArgumentException(err_msg);
+        }
+        CheckSavingsAccountBase operand_account = CheckSavingsAccountBase.findOpen(conn, operand);
+        if (!operand_account.hasOwner(conn, initiator)) {
+            String err_msg = String.format("The initiator %s does not own the operand account %d"
+                    , initiator
+                    , transactor
+            );
+            throw new IllegalArgumentException(err_msg);
+        }
+        String timestamp = BankUtil.getSQLTimeStamp();
+        transactor_account.updateBalance(
+                conn,
+                transactor_account.getBalance() - amount,
+                false // should_commit
+        );
+        operand_account.updateBalance(
+                conn,
+                operand_account.getBalance() + amount,
+                false // should_commit
+        );
+
+        int t_id = BinaryTransaction.create(
+                conn,
+                amount,
+                timestamp,
+                0, // fee
+                initiator,
+                transactor,
+                BinaryTransaction.BinaryTransactionType.TRANSFER,
+                operand,
+                false // should_commit
+        );
+        if (should_commit)
+            conn.commit();
+
+        return t_id;
+    }
 }
