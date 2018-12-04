@@ -118,4 +118,35 @@ public class TransactionFactory {
 
         return t_id;
     }
+
+    public static int createPurchase(
+            Connection conn,
+            int amount,
+            String initiator, // customer tax_id
+            int transactor, // account_id
+            boolean should_commit
+    ) throws SQLException, IllegalArgumentException {
+        PocketAccount pocket_account = PocketAccount.findOpen(conn, transactor);
+        int fee = pocket_account.hasTransactionThisMonth(conn) ? 0 : 500;
+        String timestamp = BankUtil.getSQLTimeStamp();
+        pocket_account.updateBalance(
+                conn,
+                pocket_account.getBalance() - amount - fee,
+                false // should_commit
+        );
+        int t_id = UnaryTransaction.create(
+                conn,
+                amount,
+                timestamp,
+                fee,
+                initiator,
+                transactor,
+                UnaryTransaction.UnaryTransactionType.PURCHASE,
+                false // should_commit
+        );
+        if (should_commit)
+            conn.commit();
+
+        return t_id;
+    }
 }
