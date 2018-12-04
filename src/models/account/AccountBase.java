@@ -3,7 +3,7 @@ package models.account;
 import bank_util.*;
 import java.sql.*;
 
-abstract public class AccountBase {
+public class AccountBase {
 	public enum AccountType {
 		STUDENT_CHECKING("student_checking"),
 		INTEREST_CHECKING("interest_checking"),
@@ -14,10 +14,10 @@ abstract public class AccountBase {
 		AccountType(String n) {
 			name = n;
 		}
-		protected String getName() {
+		public String getName() {
          return name;
         }
-        protected static AccountType fromString(String n) {
+        public static AccountType fromString(String n) {
 		    switch (n) {
 		        case "student_checking":
 		            return AccountType.STUDENT_CHECKING;
@@ -40,7 +40,7 @@ abstract public class AccountBase {
    protected AccountType acct_type;
    protected String customer_tax_id;
 
-   AccountBase(
+   public AccountBase(
       int account_id,
       int balance,
       boolean closed,

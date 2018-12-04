@@ -1,6 +1,8 @@
 package models;
 
 import java.sql.*;
+import java.util.ArrayList;
+import models.account.*;
 
 public class Customer {
    private String tax_id;
@@ -88,5 +90,40 @@ public class Customer {
    }
    public String getPin() {
       return pin;
+   }
+
+   public ArrayList<AccountBase> genAccounts(
+           Connection conn
+   ) throws SQLException {
+      ArrayList<AccountBase> accounts = new ArrayList<AccountBase>();
+      String find_accounts_sql = String.format("SELECT %s" +
+                      "Account A" +
+                      "JOIN Account_ownership Ao ON A.account_id = Ao.account_id" +
+                      "WHERE Ao.tax_id = '%s'"
+              , "A.account_id, A.balance, A.closed, A.branch_name, A.type, A.primary_owner"
+              , this.tax_id
+      );
+      Statement stmt = conn.createStatement();
+      ResultSet rs = stmt.executeQuery(find_accounts_sql);
+      while (rs.next()) {
+         int account_id = rs.getInt("account_id");
+         int balance = rs.getInt("balance");
+         boolean closed = (rs.getInt("closed") == 1);
+         String branch_name = rs.getString("branch_name");
+         AccountBase.AccountType type = AccountBase.AccountType.fromString(rs.getString("type"));
+         String primary_owner = rs.getString("primary_owner");
+
+         AccountBase account = new AccountBase(
+                 account_id,
+                 balance,
+                 closed,
+                 branch_name,
+                 type,
+                 primary_owner
+         );
+
+         accounts.add(account);
+      }
+      return accounts;
    }
 }
