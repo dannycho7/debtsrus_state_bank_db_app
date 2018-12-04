@@ -16,7 +16,21 @@ abstract public class AccountBase {
 		}
 		protected String getName() {
          return name;
-      }
+        }
+        protected static AccountType fromString(String n) {
+		    switch (n) {
+		        case "student_checking":
+		            return AccountType.STUDENT_CHECKING;
+                case "interest_checking":
+                    return AccountType.INTEREST_CHECKING;
+                case "savings":
+                    return AccountType.SAVINGS;
+                case "pocket":
+                    return AccountType.POCKET;
+                default:
+                    return null;
+            }
+        }
 	}
 
    protected int account_id;

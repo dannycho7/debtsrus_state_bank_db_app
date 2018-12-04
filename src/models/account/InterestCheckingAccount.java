@@ -41,4 +41,24 @@ public class InterestCheckingAccount extends CheckSavingsAccountBase {
          conn.commit();
       return account_id;
    }
+
+   public static InterestCheckingAccount find(
+           Connection conn,
+           int account_id
+   ) throws SQLException, IllegalArgumentException {
+      CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.find(conn, account_id);
+      if (chk_savings_account.acct_type == CheckSavingsAccountType.INTEREST_CHECKING.getCorrespondingAccountType()) {
+         return new InterestCheckingAccount(
+                 chk_savings_account.account_id,
+                 chk_savings_account.balance,
+                 chk_savings_account.closed,
+                 chk_savings_account.branch_name,
+                 chk_savings_account.acct_type,
+                 chk_savings_account.customer_tax_id
+         );
+      } else {
+         String err_msg = String.format("Account id %d exists, but it was not an interest checking account", account_id);
+         throw new IllegalArgumentException(err_msg);
+      }
+   }
 }

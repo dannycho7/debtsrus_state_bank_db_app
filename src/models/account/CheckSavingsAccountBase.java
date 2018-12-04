@@ -3,7 +3,7 @@ package models.account;
 import java.sql.*;
 import models.transaction.*;
 
-abstract public class CheckSavingsAccountBase extends AccountBase {
+public class CheckSavingsAccountBase extends AccountBase {
     public enum CheckSavingsAccountType {
         STUDENT_CHECKING(AccountType.STUDENT_CHECKING),
         INTEREST_CHECKING(AccountType.INTEREST_CHECKING),
@@ -72,5 +72,39 @@ abstract public class CheckSavingsAccountBase extends AccountBase {
             conn.commit();
 
         return account_id;
+    }
+
+    public static CheckSavingsAccountBase find(
+            Connection conn,
+            int account_id
+    ) throws SQLException, IllegalArgumentException {
+        String get_check_savings_account_sql = String.format("SELECT %s FROM Account A" +
+                        "JOIN Check_savings_account Csa ON A.account_id = Csa.account_id" +
+                        "WHERE Csa.account_id = %s"
+                , "A.account_id", "A.balance", "A.closed", "A.branch_name", "A.type", "A.primary_owner"
+                , account_id
+        );
+
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(get_check_savings_account_sql);
+        while (rs.next()) {
+            int chk_savings_account_id = rs.getInt("account_id");
+            int balance = rs.getInt("balance");
+            boolean closed = (rs.getInt("closed") == 1);
+            String branch_name = rs.getString("branch_name");
+            AccountType type = AccountBase.AccountType.fromString(rs.getString("type"));
+            String primary_owner = rs.getString("primary_owner");
+
+            return new CheckSavingsAccountBase(
+                    chk_savings_account_id,
+                    balance,
+                    closed,
+                    branch_name,
+                    type,
+                    primary_owner
+            );
+        }
+
+        throw new IllegalArgumentException(String.format("Could not find CheckSavingsAccount %s", account_id));
     }
 }

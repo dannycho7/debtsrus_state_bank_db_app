@@ -33,12 +33,32 @@ public class SavingsAccount extends CheckSavingsAccountBase {
               conn,
               balance,
               branch_name,
-              CheckSavingsAccountBase.CheckSavingsAccountType.SAVINGS,
+              CheckSavingsAccountType.SAVINGS,
               customer_tax_id,
               false // should_commit
       ); // creates account base
       if (should_commit)
          conn.commit();
       return account_id;
+   }
+
+   public static SavingsAccount find(
+           Connection conn,
+           int account_id
+   ) throws SQLException, IllegalArgumentException {
+      CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.find(conn, account_id);
+      if (chk_savings_account.acct_type == CheckSavingsAccountType.SAVINGS.getCorrespondingAccountType()) {
+         return new SavingsAccount(
+                 chk_savings_account.account_id,
+                 chk_savings_account.balance,
+                 chk_savings_account.closed,
+                 chk_savings_account.branch_name,
+                 chk_savings_account.acct_type,
+                 chk_savings_account.customer_tax_id
+         );
+      } else {
+         String err_msg = String.format("Account id %d exists, but it was not an savings account", account_id);
+         throw new IllegalArgumentException(err_msg);
+      }
    }
 }

@@ -47,4 +47,33 @@ public class Customer {
       if (should_commit)
          conn.commit();
    }
+
+
+   public static Customer find(
+           Connection conn,
+           String customer_tax_id
+   ) throws SQLException, IllegalArgumentException {
+      String get_customer_sql = String.format("SELECT %s FROM Customer C WHERE C.tax_id = %s"
+              , "C.tax_id", "C.name", "C.address", "C.pin"
+              , customer_tax_id
+      );
+
+      Statement stmt = conn.createStatement();
+      ResultSet rs = stmt.executeQuery(get_customer_sql);
+      while (rs.next()) {
+         String tax_id = rs.getString("tax_id");
+         String name = rs.getString("name");
+         String address = rs.getString("address");
+         String pin = rs.getString("pin");
+
+         return new Customer(
+                 tax_id,
+                 name,
+                 address,
+                 pin
+         );
+      }
+
+      throw new IllegalArgumentException(String.format("Could not find Customer %s", customer_tax_id));
+   }
 }
