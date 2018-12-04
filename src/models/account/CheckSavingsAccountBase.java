@@ -19,7 +19,7 @@ public class CheckSavingsAccountBase extends AccountBase {
         }
     }
 
-    CheckSavingsAccountBase(
+    public CheckSavingsAccountBase(
             int account_id,
             int balance,
             boolean closed,

@@ -3,7 +3,7 @@ package models.account;
 import java.sql.*;
 
 public class CheckingAccount extends CheckSavingsAccountBase {
-   CheckingAccount(
+   public CheckingAccount(
       int account_id,
       int balance,
       boolean closed,

@@ -21,7 +21,7 @@ public class BinaryTransaction extends TransactionBase {
 
     protected BinaryTransactionType binary_type;
 
-    BinaryTransaction(
+    public BinaryTransaction(
             int t_id,
             int amount,
             String timestamp,

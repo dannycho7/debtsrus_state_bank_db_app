@@ -18,7 +18,7 @@ public class CheckTransaction extends TransactionBase {
 
     protected CheckTransactionType check_type;
 
-    CheckTransaction(
+    public CheckTransaction(
             int t_id,
             int amount,
             String timestamp,

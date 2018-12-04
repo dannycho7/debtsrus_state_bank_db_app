@@ -10,7 +10,7 @@ public class Customer {
    private String address;
    private String pin;
 
-   Customer(
+   public Customer(
       String tax_id,
       String name,
       String address,

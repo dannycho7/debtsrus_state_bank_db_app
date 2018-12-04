@@ -8,7 +8,7 @@ public class AccountCloseHistory {
     protected int account_id;
     protected String timestamp;
 
-    AccountCloseHistory(
+    public AccountCloseHistory(
             int account_id,
             String timestamp
     ) {

@@ -35,7 +35,7 @@ abstract public class TransactionBase {
     protected int transactor;
     protected TransactionType type;
 
-    TransactionBase(
+    public TransactionBase(
             int t_id,
             int amount,
             String timestamp,

@@ -20,7 +20,7 @@ public class UnaryTransaction extends TransactionBase {
 
     protected UnaryTransactionType unary_type;
 
-    UnaryTransaction(
+    public UnaryTransaction(
             int t_id,
             int amount,
             String timestamp,

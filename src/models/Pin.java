@@ -6,7 +6,7 @@ public class Pin {
    private String pin_no;
    private String customer_tax_id;
 
-   Pin(
+   public Pin(
       String pin_no,
       String customer_tax_id
    ) {

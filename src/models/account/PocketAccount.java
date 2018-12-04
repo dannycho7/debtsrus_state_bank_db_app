@@ -13,7 +13,7 @@ public class PocketAccount extends AccountBase {
       AccountType.SAVINGS.getName()
    ));
 
-   PocketAccount(
+   public PocketAccount(
       int account_id,
       int balance,
       boolean closed,
