@@ -386,4 +386,34 @@ public class TransactionFactory {
 
         return t_id;
     }
+
+    public static int createAccrueInterest(
+            Connection conn,
+            String initiator, // customer tax_id
+            int transactor, // check/savings account_id
+            boolean should_commit
+    ) throws SQLException, IllegalArgumentException {
+        CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.findOpen(conn, transactor);
+        int amount = chk_savings_account.genAvgDailyBalanceInMonth(conn);
+        String timestamp = BankUtil.getSQLTimeStamp();
+        chk_savings_account.updateBalance(
+                conn,
+                chk_savings_account.getBalance() + amount,
+                false // should_commit
+        );
+        int t_id = UnaryTransaction.create(
+                conn,
+                amount,
+                timestamp,
+                0, // fee
+                initiator,
+                transactor,
+                UnaryTransaction.UnaryTransactionType.ACCRUE_INTEREST,
+                false // should_commit
+        );
+        if (should_commit)
+            conn.commit();
+
+        return t_id;
+    }
 }

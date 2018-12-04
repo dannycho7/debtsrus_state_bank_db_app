@@ -1,5 +1,6 @@
 package models.account;
 
+import bank_util.*;
 import java.sql.*;
 import models.transaction.*;
 
@@ -116,5 +117,38 @@ public class CheckSavingsAccountBase extends AccountBase {
             throw new IllegalArgumentException(err_msg);
         }
         return account;
+    }
+
+    public int genAvgDailyBalanceInMonth(
+            Connection conn
+    ) throws SQLException {
+        String get_transactions_this_month_sql = String.format("SELECT %s" +
+                        "FROM Transaction T" +
+                        "LEFT JOIN Binary_transaction Bt ON T.t_id = Bt.t_id" +
+                        "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND (T.transactor = %d OR Bt.operand = %d)"
+                , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type, Bt.operand"
+                , BankUtil.getCurrentMonthYear()
+                , this.account_id
+                , this.account_id
+        );
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(get_transactions_this_month_sql);
+        int num_days_in_month = BankUtil.getNumDaysInCurrentMonth();
+        int sum_total_balance_in_month = 0;
+        while (rs.next()) {
+            int t_id = rs.getInt("t_id");
+            int amount = rs.getInt("amount");
+            String timestamp = rs.getString("timestamp");
+            int fee = rs.getInt("fee");
+            String initiator = rs.getString("initiator");
+            int transactor = rs.getInt("transactor");
+            String type = rs.getString("type");
+            int operand = rs.getInt("operand");
+
+            // TODO:
+            // use (transactor, operand, type) 3-tuple to figure out delta +/- in balance from this transaction
+            // add to sum_total_balance_in_month
+        }
+        return (int) (sum_total_balance_in_month / num_days_in_month);
     }
 }
