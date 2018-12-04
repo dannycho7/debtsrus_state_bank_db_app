@@ -356,4 +356,34 @@ public class TransactionFactory {
 
         return t_id;
     }
+
+    public static int createWriteCheck(
+            Connection conn,
+            int amount,
+            String initiator, // customer tax_id
+            int transactor, // check account_id
+            boolean should_commit
+    ) throws SQLException, IllegalArgumentException {
+        CheckingAccount chk_savings_account = CheckingAccount.findOpen(conn, transactor);
+        String timestamp = BankUtil.getSQLTimeStamp();
+        chk_savings_account.updateBalance(
+                conn,
+                chk_savings_account.getBalance() - amount,
+                false // should_commit
+        );
+        int t_id = CheckTransaction.create(
+                conn,
+                amount,
+                timestamp,
+                0, // fee
+                initiator,
+                transactor,
+                CheckTransaction.CheckTransactionType.WRITE_CHECK,
+                false // should_commit
+        );
+        if (should_commit)
+            conn.commit();
+
+        return t_id;
+    }
 }
