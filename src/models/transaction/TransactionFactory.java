@@ -88,4 +88,34 @@ public class TransactionFactory {
 
         return t_id;
     }
+
+    public static int createWithdrawal(
+            Connection conn,
+            int amount,
+            String initiator, // customer tax_id
+            int transactor, // account_id
+            boolean should_commit
+    ) throws SQLException, IllegalArgumentException {
+        CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.findOpen(conn, transactor);
+        String timestamp = BankUtil.getSQLTimeStamp();
+        chk_savings_account.updateBalance(
+                conn,
+                chk_savings_account.getBalance() - amount,
+                false // should_commit
+        );
+        int t_id = UnaryTransaction.create(
+                conn,
+                amount,
+                timestamp,
+                0, // fee
+                initiator,
+                transactor,
+                UnaryTransaction.UnaryTransactionType.WITHDRAWAL,
+                false // should_commit
+        );
+        if (should_commit)
+            conn.commit();
+
+        return t_id;
+    }
 }
