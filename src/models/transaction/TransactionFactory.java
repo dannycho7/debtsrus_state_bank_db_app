@@ -278,7 +278,7 @@ public class TransactionFactory {
             throw new IllegalArgumentException(err_msg);
         }
         PocketAccount operand_account = PocketAccount.findOpen(conn, operand);
-        
+
         int fee = transactor_account.hasTransactionThisMonth(conn) ? 0 : 500;
         String timestamp = BankUtil.getSQLTimeStamp();
         transactor_account.updateBalance(
@@ -300,6 +300,54 @@ public class TransactionFactory {
                 initiator,
                 transactor,
                 BinaryTransaction.BinaryTransactionType.PAY_FRIEND,
+                operand,
+                false // should_commit
+        );
+        if (should_commit)
+            conn.commit();
+
+        return t_id;
+    }
+
+    public static int createWire(
+            Connection conn,
+            int amount,
+            String initiator, // customer tax_id
+            int transactor, // check/savings account_id
+            int operand, // other check/savings account_id
+            boolean should_commit
+    ) throws SQLException, IllegalArgumentException {
+        CheckSavingsAccountBase transactor_account = CheckSavingsAccountBase.findOpen(conn, transactor);
+        if (!transactor_account.hasOwner(conn, initiator)) {
+            String err_msg = String.format("The initiator %s does not own the transactor account %d"
+                    , initiator
+                    , transactor
+            );
+            throw new IllegalArgumentException(err_msg);
+        }
+        CheckSavingsAccountBase operand_account = CheckSavingsAccountBase.findOpen(conn, operand);
+
+        int fee = (int) (0.02 * amount);
+        String timestamp = BankUtil.getSQLTimeStamp();
+        transactor_account.updateBalance(
+                conn,
+                transactor_account.getBalance() - amount - fee,
+                false // should_commit
+        );
+        operand_account.updateBalance(
+                conn,
+                operand_account.getBalance() + amount,
+                false // should_commit
+        );
+
+        int t_id = BinaryTransaction.create(
+                conn,
+                amount,
+                timestamp,
+                fee,
+                initiator,
+                transactor,
+                BinaryTransaction.BinaryTransactionType.WIRE,
                 operand,
                 false // should_commit
         );
