@@ -11,12 +11,10 @@ abstract public class AccountBase {
 		POCKET("pocket");
 
 		private final String name;
-
 		AccountType(String n) {
 			name = n;
 		}
-
-      protected String getName() {
+		protected String getName() {
          return name;
       }
 	}

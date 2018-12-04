@@ -5,22 +5,16 @@ import models.transaction.*;
 
 abstract public class CheckSavingsAccountBase extends AccountBase {
     public enum CheckSavingsAccountType {
-        STUDENT_CHECKING("student_checking"),
-        INTEREST_CHECKING("interest_checking"),
-        SAVINGS("savings");
+        STUDENT_CHECKING(AccountType.STUDENT_CHECKING),
+        INTEREST_CHECKING(AccountType.INTEREST_CHECKING),
+        SAVINGS(AccountType.SAVINGS);
 
-        private final String name;
-
-        CheckSavingsAccountType(String n) {
-            name = n;
+        private final AccountType account_type;
+        CheckSavingsAccountType(AccountType t) {
+            account_type = t;
         }
-
-        protected String getName() {
-            return name;
-        }
-
         protected AccountType getCorrespondingAccountType() {
-            return AccountType.valueOf(name);
+            return account_type;
         }
     }
 

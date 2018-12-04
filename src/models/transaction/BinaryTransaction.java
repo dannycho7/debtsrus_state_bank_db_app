@@ -4,24 +4,18 @@ import java.sql.*;
 
 public class BinaryTransaction extends TransactionBase {
     public enum BinaryTransactionType {
-        TOP_UP("Top-Up"),
-        TRANSFER("Transfer"),
-        COLLECT("Collect"),
-        PAY_FRIEND("Pay-Friend"),
-        WIRE("Wire");
+        TOP_UP(TransactionType.TOP_UP),
+        TRANSFER(TransactionType.TRANSFER),
+        COLLECT(TransactionType.COLLECT),
+        PAY_FRIEND(TransactionType.PAY_FRIEND),
+        WIRE(TransactionType.WIRE);
 
-        private final String name;
-
-        BinaryTransactionType(String n) {
-            name = n;
+        private final TransactionType transaction_type;
+        BinaryTransactionType(TransactionType t) {
+            transaction_type = t;
         }
-
-        protected String getName() {
-            return name;
-        }
-
         protected TransactionType getCorrespondingTransactionType() {
-            return TransactionType.valueOf(name);
+            return transaction_type;
         }
     }
 

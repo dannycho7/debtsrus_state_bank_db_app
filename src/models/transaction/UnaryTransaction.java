@@ -4,23 +4,17 @@ import java.sql.*;
 
 public class UnaryTransaction extends TransactionBase {
     public enum UnaryTransactionType {
-        DEPOSIT("Deposit"),
-        WITHDRAWAL("Withdrawal"),
-        PURCHASE("Purchase"),
-        ACCRUE_INTEREST("Accrue-Interest");
+        DEPOSIT(TransactionType.DEPOSIT),
+        WITHDRAWAL(TransactionType.WITHDRAWAL),
+        PURCHASE(TransactionType.PURCHASE),
+        ACCRUE_INTEREST(TransactionType.ACCRUE_INTEREST);
 
-        private final String name;
-
-        UnaryTransactionType(String n) {
-            name = n;
+        private final TransactionType transaction_type;
+        UnaryTransactionType(TransactionType t) {
+            transaction_type = t;
         }
-
-        protected String getName() {
-            return name;
-        }
-
         protected TransactionType getCorrespondingTransactionType() {
-            return TransactionType.valueOf(name);
+            return transaction_type;
         }
     }
 

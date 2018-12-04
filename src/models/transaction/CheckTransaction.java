@@ -5,20 +5,14 @@ import java.sql.*;
 
 public class CheckTransaction extends TransactionBase {
     public enum CheckTransactionType {
-        WRITE_CHECK("Write-Check");
+        WRITE_CHECK(TransactionType.WRITE_CHECK);
 
-        private final String name;
-
-        CheckTransactionType(String n) {
-            name = n;
+        private final TransactionType transaction_type;
+        CheckTransactionType(TransactionType t) {
+            transaction_type = t;
         }
-
-        protected String getName() {
-            return name;
-        }
-
         protected TransactionType getCorrespondingTransactionType() {
-            return TransactionType.valueOf(name);
+            return transaction_type;
         }
     }
 
