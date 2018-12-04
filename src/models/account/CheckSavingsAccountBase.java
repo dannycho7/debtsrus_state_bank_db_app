@@ -63,7 +63,6 @@ public class CheckSavingsAccountBase extends AccountBase {
         TransactionFactory.createDeposit(
                 conn,
                 balance, // amount (we deposit the starting balance)
-                0, // fee
                 customer_tax_id, // initiator is the creator of this account
                 account_id, // transactor
                 false // should_commit

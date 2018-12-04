@@ -1,6 +1,6 @@
 package models.account;
 
-import BankUtil.*;
+import bank_util.*;
 import java.sql.*;
 
 abstract public class AccountBase {
@@ -122,5 +122,47 @@ abstract public class AccountBase {
    }
    public String getCustomerTaxId() {
        return customer_tax_id;
+   }
+
+   public static boolean hasOwner(
+           Connection conn,
+           String owner
+   ) throws SQLException {
+       String find_owner_sql = String.format("SELECT %s FROM Account_ownership Ao WHERE Ao.tax_id = %s"
+               , "Ao.tax_id, Ao.account_id"
+               , owner
+       );
+       Statement stmt = conn.createStatement();
+       ResultSet rs = stmt.executeQuery(find_owner_sql);
+       while (rs.next()) {
+           String tax_id = rs.getString("tax_id");
+           int account_id = rs.getInt("account_id");
+           return true;
+       }
+       return false;
+   }
+
+   public void updateBalance(
+           Connection conn,
+           int balance,
+           boolean should_commit
+   ) throws SQLException, IllegalArgumentException {
+       if (balance < 0) {
+           throw new IllegalArgumentException("Cannot change balance to negative value");
+       } else if (balance == 0) {
+           // close account
+       } else {
+           Statement stmt = conn.createStatement();
+           String sql = String.format("UPDATE Account A SET A.balance = %d WHERE A.account_id = %d"
+                   , balance
+                   , account_id
+           );
+           int n = stmt.executeUpdate(sql);
+           this.balance = balance;
+           System.out.println(n + " rows affected");
+
+           if (should_commit)
+               conn.commit();
+       }
    }
 }

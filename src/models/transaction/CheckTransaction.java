@@ -1,6 +1,6 @@
 package models.transaction;
 
-import BankUtil.*;
+import bank_util.*;
 import java.sql.*;
 
 public class CheckTransaction extends TransactionBase {

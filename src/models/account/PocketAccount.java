@@ -1,5 +1,6 @@
 package models.account;
 
+import bank_util.*;
 import java.sql.*;
 import java.util.*;
 
@@ -130,5 +131,26 @@ public class PocketAccount extends AccountBase {
 
    public int getLinkedAccountId() {
        return linked_account_id;
+   }
+
+   public boolean hasTransactionThisMonth(
+           Connection conn
+   ) throws SQLException {
+       String find_transaction_sql = String.format("SELECT %s" +
+                       "FROM Transaction T" +
+                       "LEFT JOIN Binary_transaction Bt ON T.t_id = Bt.t_id" +
+                       "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND (T.transactor = %d OR Bt.operand = %d)" +
+                       "LIMIT 1"
+               , "T.t_id"
+               , BankUtil.getCurrentMonthYear()
+               , account_id
+               , account_id
+       );
+       Statement stmt = conn.createStatement();
+       ResultSet rs = stmt.executeQuery(find_transaction_sql);
+       while (rs.next()) {
+           return true;
+       }
+       return false;
    }
 }
