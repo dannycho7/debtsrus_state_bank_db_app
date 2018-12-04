@@ -107,4 +107,16 @@ public class CheckSavingsAccountBase extends AccountBase {
 
         throw new IllegalArgumentException(String.format("Could not find CheckSavingsAccount %s", account_id));
     }
+
+    public static CheckSavingsAccountBase findOpen(
+            Connection conn,
+            int account_id
+    ) throws SQLException, IllegalArgumentException {
+        CheckSavingsAccountBase account = CheckSavingsAccountBase.find(conn, account_id);
+        if (account.isClosed()) {
+            String err_msg = String.format("Found the account %d, but it was closed", account.account_id);
+            throw new IllegalArgumentException(err_msg);
+        }
+        return account;
+    }
 }

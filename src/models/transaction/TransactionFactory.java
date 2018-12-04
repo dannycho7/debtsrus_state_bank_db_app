@@ -1,5 +1,6 @@
 package models.transaction;
 
+import models.account.*;
 import BankUtil.*;
 import java.sql.*;
 
@@ -11,7 +12,8 @@ public class TransactionFactory {
         String initiator, // customer tax_id
         int transactor, // account_id
         boolean should_commit
-    ) throws SQLException {
+    ) throws SQLException, IllegalArgumentException {
+        CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.find(conn, transactor);
         String timestamp = BankUtil.getSQLTimeStamp();
         int t_id = UnaryTransaction.create(
                 conn,
@@ -23,6 +25,8 @@ public class TransactionFactory {
                 UnaryTransaction.UnaryTransactionType.DEPOSIT,
                 false // should_commit
         );
+        if (should_commit)
+            conn.commit();
 
         return t_id;
     }

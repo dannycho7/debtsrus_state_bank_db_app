@@ -116,6 +116,18 @@ public class PocketAccount extends AccountBase {
        throw new IllegalArgumentException(String.format("Could not find PocketAccount %s", account_id));
    }
 
+   public static PocketAccount findOpen(
+           Connection conn,
+           int account_id
+   ) throws SQLException, IllegalArgumentException {
+       PocketAccount account = PocketAccount.find(conn, account_id);
+       if (account.isClosed()) {
+           String err_msg = String.format("Found the account %d, but it was closed", account.account_id);
+           throw new IllegalArgumentException(err_msg);
+       }
+       return account;
+   }
+
    public int getLinkedAccountId() {
        return linked_account_id;
    }
