@@ -36,17 +36,18 @@ public class CheckSavingsAccountBase extends AccountBase {
         );
     }
 
-    // returns: account_id
-    public static int create(
+    public static void create(
             Connection conn,
+            int account_id,
             int balance, // $$ in cents
             String branch_name,
             CheckSavingsAccountType check_savings_account_type,
             String customer_tax_id,
             boolean should_commit
     ) throws SQLException {
-        int account_id = AccountBase.create(
+        AccountBase.create(
                 conn,
+                account_id,
                 balance,
                 branch_name,
                 check_savings_account_type.getCorrespondingAccountType(),
@@ -69,8 +70,6 @@ public class CheckSavingsAccountBase extends AccountBase {
         );
         if (should_commit)
             conn.commit();
-
-        return account_id;
     }
 
     public static CheckSavingsAccountBase find(

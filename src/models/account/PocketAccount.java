@@ -47,9 +47,9 @@ public class PocketAccount extends AccountBase {
       return false;
    }
 
-   // returns: account_id
-   public static int create(
+   public static void create(
       Connection conn,
+      int account_id,
       int balance, // $$ in cents
       String branch_name,
       String customer_tax_id,
@@ -59,8 +59,9 @@ public class PocketAccount extends AccountBase {
       if (!verifyLinkedAccountId(conn, customer_tax_id, linked_account_id)) {
          throw new IllegalArgumentException("Could not create pocket account");
       }
-      int account_id = AccountBase.create(
+      AccountBase.create(
          conn,
+         account_id,
          balance,
          branch_name,
          AccountType.POCKET,
@@ -77,8 +78,6 @@ public class PocketAccount extends AccountBase {
       System.out.println(n + " rows affected");
       if (should_commit)
          conn.commit();
-
-      return account_id;
    }
 
    public static PocketAccount find(

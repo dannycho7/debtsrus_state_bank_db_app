@@ -71,9 +71,9 @@ abstract public class AccountBase {
        System.out.println(n + " rows affected");
    }
 
-   // returns: account_id
-   protected static int create(
+   protected static void create(
       Connection conn,
+      int account_id,
       int balance, // $$ in cents
       String branch_name,
       AccountType acct_type,
@@ -81,7 +81,6 @@ abstract public class AccountBase {
       boolean should_commit
    ) throws SQLException {
       Statement stmt = conn.createStatement();
-      int account_id = BankUtil.getUUID();
 
       String sql = String.format("INSERT INTO Account %s VALUES (%d, %d, %d, '%s', '%s', '%s')"
                   , "(account_id, balance, closed, branch_name, type, primary_owner)"
@@ -101,8 +100,6 @@ abstract public class AccountBase {
       );
       if (should_commit)
           conn.commit();
-
-      return account_id;
    }
 
    public int getAccountId() {
