@@ -142,7 +142,7 @@ public class AccountBase {
            Connection conn,
            String owner
    ) throws SQLException {
-       String find_owner_sql = String.format("SELECT %s FROM Account_ownership Ao WHERE Ao.tax_id = %s"
+       String find_owner_sql = String.format("SELECT %s FROM Account_ownership Ao WHERE Ao.tax_id = '%s'"
                , "Ao.tax_id, Ao.account_id"
                , owner
        );
