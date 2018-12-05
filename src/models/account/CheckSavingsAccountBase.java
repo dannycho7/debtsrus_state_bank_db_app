@@ -77,9 +77,9 @@ public class CheckSavingsAccountBase extends AccountBase {
             Connection conn,
             int account_id
     ) throws SQLException, IllegalArgumentException {
-        String get_check_savings_account_sql = String.format("SELECT %s FROM Account A" +
-                        "JOIN Check_savings_account Csa ON A.account_id = Csa.account_id" +
-                        "WHERE Csa.account_id = %s"
+        String get_check_savings_account_sql = String.format("SELECT %s FROM Account A " +
+                        "JOIN Check_savings_account Csa ON A.account_id = Csa.account_id " +
+                        "WHERE Csa.account_id = %s "
                 , "A.account_id", "A.balance", "A.closed", "A.branch_name", "A.type", "A.primary_owner"
                 , account_id
         );
@@ -140,7 +140,7 @@ public class CheckSavingsAccountBase extends AccountBase {
     public double genInterestRate(
             Connection conn
     ) throws SQLException, IllegalArgumentException {
-        String get_account_type_sql = String.format("SELECT %s FROM Account_type At" +
+        String get_account_type_sql = String.format("SELECT %s FROM Account_type At " +
                         "WHERE At.name = '%s'"
                 , "At.interest_rate"
                 , this.acct_type.getName()

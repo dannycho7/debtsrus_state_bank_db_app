@@ -39,8 +39,8 @@ public class AccountCloseHistory {
             Connection conn
     ) throws SQLException {
         ArrayList<AccountCloseHistory> accounts = new ArrayList<AccountCloseHistory>();
-        String find_accounts_sql = String.format("SELECT %s" +
-                        "Account_close_history Ach" +
+        String find_accounts_sql = String.format("SELECT %s " +
+                        "Account_close_history Ach " +
                         "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s'"
                 , "Ach.account_id, Ach.timestamp"
                 , BankUtil.getCurrentMonthYear()

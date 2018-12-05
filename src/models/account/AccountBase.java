@@ -250,9 +250,9 @@ public class AccountBase {
    protected int[] genDeltasFromTransactionsThisMonth(
            Connection conn
    ) throws SQLException, IllegalArgumentException {
-       String get_transactions_this_month_sql = String.format("SELECT %s" +
-                       "FROM Transaction T" +
-                       "LEFT JOIN Binary_transaction Bt ON T.t_id = Bt.t_id" +
+       String get_transactions_this_month_sql = String.format("SELECT %s " +
+                       "FROM Transaction T " +
+                       "LEFT JOIN Binary_transaction Bt ON T.t_id = Bt.t_id " +
                        "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND (T.transactor = %d OR Bt.operand = %d)"
                , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type, Bt.operand"
                , BankUtil.getCurrentMonthYear()
@@ -304,9 +304,9 @@ public class AccountBase {
             Connection conn
     ) throws SQLException {
         ArrayList<Customer> customers = new ArrayList<Customer>();
-        String find_customers_sql = String.format("SELECT %s" +
-                        "Customer C" +
-                        "JOIN Account_ownership Ao ON C.tax_id = Ao.tax_id" +
+        String find_customers_sql = String.format("SELECT %s " +
+                        "Customer C " +
+                        "JOIN Account_ownership Ao ON C.tax_id = Ao.tax_id " +
                         "WHERE Ao.account_id = '%s'"
                 , "C.tax_id, C.name, C.address, C.pin"
                 , this.account_id
@@ -332,9 +332,9 @@ public class AccountBase {
     public ArrayList<BinaryTransaction> genBinaryTransactionsThisMonth(
             Connection conn
     ) throws SQLException, IllegalArgumentException {
-        String get_binary_transactions_this_month_sql = String.format("SELECT %s" +
-                        "FROM Transaction T" +
-                        "JOIN Binary_transaction Bt ON T.t_id = Bt.t_id" +
+        String get_binary_transactions_this_month_sql = String.format("SELECT %s " +
+                        "FROM Transaction T " +
+                        "JOIN Binary_transaction Bt ON T.t_id = Bt.t_id " +
                         "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND (T.transactor = %d OR Bt.operand = %d)"
                 , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type, Bt.operand"
                 , BankUtil.getCurrentMonthYear()
@@ -370,10 +370,10 @@ public class AccountBase {
     public ArrayList<CheckTransaction> genCheckTransactionsThisMonth(
             Connection conn
     ) throws SQLException, IllegalArgumentException {
-        String get_check_transactions_this_month_sql = String.format("SELECT %s" +
-                        "FROM Transaction T" +
-                        "JOIN Check_transaction Ct ON T.t_id = Ct.t_id" +
-                        "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND T.transactor = %d"
+        String get_check_transactions_this_month_sql = String.format("SELECT %s " +
+                        "FROM Transaction T " +
+                        "JOIN Check_transaction Ct ON T.t_id = Ct.t_id " +
+                        "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND T.transactor = %d "
                 , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type, Ct.check_no"
                 , BankUtil.getCurrentMonthYear()
                 , this.account_id
@@ -409,10 +409,10 @@ public class AccountBase {
     public ArrayList<UnaryTransaction> genUnaryTransactionsThisMonth(
             Connection conn
     ) throws SQLException, IllegalArgumentException {
-        String get_unary_transactions_this_month_sql = String.format("SELECT %s" +
-                        "FROM Transaction T" +
-                        "JOIN Unary_transaction Ut ON T.t_id = Ct.t_id" +
-                        "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND T.transactor = %d"
+        String get_unary_transactions_this_month_sql = String.format("SELECT %s " +
+                        "FROM Transaction T " +
+                        "JOIN Unary_transaction Ut ON T.t_id = Ct.t_id " +
+                        "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND T.transactor = %d "
                 , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type"
                 , BankUtil.getCurrentMonthYear()
                 , this.account_id
@@ -453,7 +453,7 @@ public class AccountBase {
     public static boolean hasInterestBeenAddedThisMonth(
            Connection conn
     ) throws SQLException {
-        String find_interest_sql = String.format("SELECT %s FROM Transaction T" +
+        String find_interest_sql = String.format("SELECT %s FROM Transaction T " +
                         "WHERE T.type = '%s' AND TO_CHAR(T.timestamp, 'MM-YYYY') = '%s'"
                 , "T.t_id"
                 , TransactionBase.TransactionType.ACCRUE_INTEREST.getName()
