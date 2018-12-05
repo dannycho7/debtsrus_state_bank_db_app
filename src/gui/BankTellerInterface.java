@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class BankTellerInterface extends JPanel{
     private Connection conn;
@@ -24,6 +25,7 @@ public class BankTellerInterface extends JPanel{
         this.add(getAddInterestButton());
         this.add(getDeleteTransactionsButton());
         this.add(getDeleteClosedAccountsButton());
+        this.add(getListClosedAccountsButton());
     }
 
     public JButton getAddAccountButton() {
@@ -117,5 +119,30 @@ public class BankTellerInterface extends JPanel{
             }
         });
         return delete_closed_accounts_and_customers_btn;
+    }
+
+    public JButton getListClosedAccountsButton() {
+        JButton list_closed_accounts_btn = new JButton("List Closed Accounts");
+        list_closed_accounts_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ArrayList<AccountCloseHistory> accounts_closed = AccountCloseHistory.genAccountsClosedInMonth(conn);
+                    String closed_message = "Closed Accounts:\n";
+                    for (AccountCloseHistory account_closed : accounts_closed) {
+                        closed_message += String.format("Account %d was closed on %s\n",
+                                account_closed.getAccountId(),
+                                account_closed.getTimestamp()
+                        );
+                    }
+                    JOptionPane.showMessageDialog(null, closed_message);
+                } catch (SQLException se) {
+                    se.printStackTrace();
+                } catch (IllegalArgumentException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
+            }
+        });
+        return list_closed_accounts_btn;
     }
 }
