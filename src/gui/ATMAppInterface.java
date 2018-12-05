@@ -20,6 +20,7 @@ public class ATMAppInterface extends JPanel{
         this.conn = conn;
         this.add(new JLabel("ATM App Interface"));
         this.add(getDepositButton());
+        this.add(getTopUpButton());
     }
 
     public JButton getDepositButton() {
@@ -30,5 +31,14 @@ public class ATMAppInterface extends JPanel{
             }
         });
         return deposit_btn;
+    }
+    public JButton getTopUpButton() {
+        JButton top_up_btn = new JButton("Top-Up");
+        top_up_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TopUpPanel.openTopUpDialog(conn, logged_in_customer_id);
+            }
+        });
+        return top_up_btn;
     }
 }
