@@ -84,7 +84,7 @@ public class AccountBase {
             conn.commit();
    }
 
-   public void modifyAccountToClose(
+   protected void modifyAccountToClose(
            Connection conn,
            boolean should_commit
    ) throws SQLException, IllegalArgumentException {
@@ -443,13 +443,6 @@ public class AccountBase {
         return unary_transactions;
     }
 
-    public void handleZeroBalance(
-           Connection conn,
-           boolean should_commit
-    ) throws IllegalArgumentException {
-        throw new IllegalArgumentException("handleZeroBalance must be overriden by classes!");
-    }
-
     public static boolean hasInterestBeenAddedThisMonth(
            Connection conn
     ) throws SQLException {
@@ -486,7 +479,7 @@ public class AccountBase {
         return false;
     }
 
-    public void updateBalance(
+    protected void updateBalance(
            Connection conn,
            int balance,
            boolean should_commit
@@ -496,11 +489,6 @@ public class AccountBase {
         }
         if (balance < 0) {
             throw new IllegalArgumentException("Cannot change balance to negative value");
-        } else if (balance == 0 || balance == 1) {
-            this.handleZeroBalance(
-                    conn,
-                    false // should_commit
-            );
         } else {
             Statement stmt = conn.createStatement();
             String sql = String.format("UPDATE Account A SET A.balance = %d WHERE A.account_id = %d"

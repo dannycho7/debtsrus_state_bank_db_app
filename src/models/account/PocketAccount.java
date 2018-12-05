@@ -132,10 +132,6 @@ public class PocketAccount extends AccountBase {
        return linked_account_id;
    }
 
-   public void handleZeroBalance() {
-
-   }
-
    public boolean hasTransactionThisMonth(
            Connection conn
    ) throws SQLException {
@@ -156,5 +152,17 @@ public class PocketAccount extends AccountBase {
        return false;
    }
 
-   public void modifyAccountToClose() {}
+    public void updateBalance(
+            Connection conn,
+            int balance,
+            boolean should_commit
+    ) throws SQLException, IllegalArgumentException {
+        super.updateBalance(
+                conn,
+                balance,
+                false // should_commit
+        );
+        if (should_commit)
+            conn.commit();
+    }
 }

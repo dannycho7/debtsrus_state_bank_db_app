@@ -157,13 +157,24 @@ public class CheckSavingsAccountBase extends AccountBase {
         throw new IllegalArgumentException("No such account type exists");
     }
 
-    public void modifyAccountToClose(
+    public void updateBalance(
             Connection conn,
+            int balance,
             boolean should_commit
-    ) throws SQLException {
-        this.modifyAccountToClose(
+    ) throws SQLException, IllegalArgumentException {
+        super.updateBalance(
                 conn,
+                balance,
                 false // should_commit
         );
+        if (balance == 0 || balance == 1) {
+            System.out.println("Closing account");
+            this.modifyAccountToClose(
+                    conn,
+                    false // should_commit
+            );
+        }
+        if (should_commit)
+            conn.commit();
     }
 }
