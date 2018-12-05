@@ -80,7 +80,7 @@ public class CheckSavingsAccountBase extends AccountBase {
         String get_check_savings_account_sql = String.format("SELECT %s FROM Account A " +
                         "JOIN Check_savings_account Csa ON A.account_id = Csa.account_id " +
                         "WHERE Csa.account_id = %s "
-                , "A.account_id", "A.balance", "A.closed", "A.branch_name", "A.type", "A.primary_owner"
+                , "A.account_id, A.balance, A.closed, A.branch_name, A.type, A.primary_owner"
                 , account_id
         );
 
