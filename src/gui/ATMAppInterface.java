@@ -21,6 +21,7 @@ public class ATMAppInterface extends JPanel{
         this.add(new JLabel("ATM App Interface"));
         this.add(getDepositButton());
         this.add(getTopUpButton());
+        this.add(getWithdrawalButton());
     }
 
     public JButton getDepositButton() {
@@ -40,5 +41,14 @@ public class ATMAppInterface extends JPanel{
             }
         });
         return top_up_btn;
+    }
+    public JButton getWithdrawalButton() {
+        JButton withdrawal_btn = new JButton("Withdrawal");
+        withdrawal_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                WithdrawalPanel.openWithdrawalDialog(conn, logged_in_customer_id);
+            }
+        });
+        return withdrawal_btn;
     }
 }
