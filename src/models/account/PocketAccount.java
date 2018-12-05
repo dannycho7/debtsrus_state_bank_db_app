@@ -142,8 +142,7 @@ public class PocketAccount extends AccountBase {
        String find_transaction_sql = String.format("SELECT %s " +
                        "FROM Transaction T " +
                        "LEFT JOIN Binary_transaction Bt ON T.t_id = Bt.t_id " +
-                       "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND (T.transactor = %d OR Bt.operand = %d)" +
-                       "LIMIT 1"
+                       "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND (T.transactor = %d OR Bt.operand = %d)"
                , "T.t_id"
                , BankUtil.getCurrentMonthYear()
                , account_id
