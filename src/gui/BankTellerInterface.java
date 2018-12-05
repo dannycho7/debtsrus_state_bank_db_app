@@ -23,6 +23,7 @@ public class BankTellerInterface extends JPanel{
         this.add(getWriteCheckButton());
         this.add(getAddInterestButton());
         this.add(getDeleteTransactionsButton());
+        this.add(getDeleteClosedAccountsButton());
     }
 
     public JButton getAddAccountButton() {
@@ -92,5 +93,29 @@ public class BankTellerInterface extends JPanel{
             }
         });
         return delete_transactions_btn;
+    }
+
+    public JButton getDeleteClosedAccountsButton() {
+        JButton delete_closed_accounts_and_customers_btn = new JButton("Delete Closed Accounts");
+        delete_closed_accounts_and_customers_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    AccountBase.deleteClosedAccounts(
+                            conn,
+                            false // should_commit
+                    );
+                    conn.commit();
+                    JOptionPane.showMessageDialog(null, "Successfully deleted all closed accounts and customers with no accounts.");
+                } catch (SQLException se) {
+                    se.printStackTrace();
+                    JDBCConnectionManager.rollbackConn(conn);
+                } catch (IllegalArgumentException ex) {
+                    ex.printStackTrace();
+                    JDBCConnectionManager.rollbackConn(conn);
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
+            }
+        });
+        return delete_closed_accounts_and_customers_btn;
     }
 }
