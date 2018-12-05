@@ -180,15 +180,13 @@ public class Customer {
                ArrayList<BinaryTransaction> binary_transactions = account.genBinaryTransactionsThisMonth(conn);
                for (BinaryTransaction binary_transaction : binary_transactions) {
                    if (binary_transaction.getInitiator() == customer.getTaxId() &&
-                           (binary_transaction.getBinaryTransactionType() == BinaryTransactionType.TRANSFER ||
-                                   binary_transaction.getBinaryTransactionType() == BinaryTransactionType.WIRE)) {
+                           (binary_transaction.isTransfer() || binary_transaction.isWire())) {
                        total += binary_transaction.getAmount();
                    }
                }
                ArrayList<UnaryTransaction> unary_transactions = account.genUnaryTransactionsThisMonth(conn);
                for (UnaryTransaction unary_transaction : unary_transactions) {
-                   if (unary_transaction.getInitiator() == customer.getTaxId() &&
-                           unary_transaction.getUnaryTransactionType() == UnaryTransactionType.DEPOSIT) {
+                   if (unary_transaction.getInitiator() == customer.getTaxId() && unary_transaction.isDeposit()) {
                        total += unary_transaction.getAmount();
                    }
                }

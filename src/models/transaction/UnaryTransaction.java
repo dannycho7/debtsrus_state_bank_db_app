@@ -93,4 +93,16 @@ public class UnaryTransaction extends TransactionBase {
     public UnaryTransactionType getUnaryTransactionType() {
         return unary_type;
     }
+    public boolean isDeposit() {
+        return this.unary_type == UnaryTransactionType.DEPOSIT;
+    }
+    public boolean isWithdrawal() {
+        return this.unary_type == UnaryTransactionType.WITHDRAWAL;
+    }
+    public boolean isPurchase() {
+        return this.unary_type == UnaryTransactionType.PURCHASE;
+    }
+    public boolean isAccrueInterest() {
+        return this.unary_type == UnaryTransactionType.ACCRUE_INTEREST;
+    }
 }

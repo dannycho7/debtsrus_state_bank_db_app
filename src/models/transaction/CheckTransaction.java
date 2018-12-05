@@ -88,4 +88,7 @@ public class CheckTransaction extends TransactionBase {
     public CheckTransactionType getCheckTransactionType() {
         return check_type;
     }
+    public boolean isCheck() {
+        return this.check_type == CheckTransactionType.WRITE_CHECK;
+    }
 }

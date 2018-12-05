@@ -98,4 +98,19 @@ public class BinaryTransaction extends TransactionBase {
     public BinaryTransactionType getBinaryTransactionType() {
         return binary_type;
     }
+    public boolean isTopUp() {
+        return this.binary_type == BinaryTransactionType.TOP_UP;
+    }
+    public boolean isTransfer() {
+        return this.binary_type == BinaryTransactionType.TRANSFER;
+    }
+    public boolean isCollect() {
+        return this.binary_type == BinaryTransactionType.COLLECT;
+    }
+    public boolean isPayFriend() {
+        return this.binary_type == BinaryTransactionType.PAY_FRIEND;
+    }
+    public boolean isWire() {
+        return this.binary_type == BinaryTransactionType.WIRE;
+    }
 }
