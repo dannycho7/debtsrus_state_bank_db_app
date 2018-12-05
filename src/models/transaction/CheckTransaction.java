@@ -14,6 +14,14 @@ public class CheckTransaction extends TransactionBase {
         protected TransactionType getCorrespondingTransactionType() {
             return transaction_type;
         }
+        public static CheckTransactionType fromString(String n) {
+            switch (n) {
+                case "Write-Check":
+                    return CheckTransactionType.WRITE_CHECK;
+                default:
+                    return null;
+            }
+        }
     }
 
     protected CheckTransactionType check_type;

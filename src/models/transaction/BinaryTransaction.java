@@ -17,6 +17,22 @@ public class BinaryTransaction extends TransactionBase {
         protected TransactionType getCorrespondingTransactionType() {
             return transaction_type;
         }
+        public static BinaryTransactionType fromString(String n) {
+            switch (n) {
+                case "Top-Up":
+                    return BinaryTransactionType.TOP_UP;
+                case "Transfer":
+                    return BinaryTransactionType.TRANSFER;
+                case "Collect":
+                    return BinaryTransactionType.COLLECT;
+                case "Pay-Friend":
+                    return BinaryTransactionType.PAY_FRIEND;
+                case "Wire":
+                    return BinaryTransactionType.WIRE;
+                default:
+                    return null;
+            }
+        }
     }
 
     protected BinaryTransactionType binary_type;

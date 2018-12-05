@@ -16,6 +16,20 @@ public class UnaryTransaction extends TransactionBase {
         protected TransactionType getCorrespondingTransactionType() {
             return transaction_type;
         }
+        public static UnaryTransactionType fromString(String n) {
+            switch (n) {
+                case "Deposit":
+                    return UnaryTransactionType.DEPOSIT;
+                case "Withdrawal":
+                    return UnaryTransactionType.WITHDRAWAL;
+                case "Purchase":
+                    return UnaryTransactionType.PURCHASE;
+                case "Accrue-Interest":
+                    return UnaryTransactionType.ACCRUE_INTEREST;
+                default:
+                    return null;
+            }
+        }
     }
 
     protected UnaryTransactionType unary_type;
