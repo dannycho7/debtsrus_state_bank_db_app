@@ -77,7 +77,7 @@ public class AccountBase {
        AccountCloseHistory.create(
                conn,
                account_id,
-               BankUtil.getCurrentMonthYear(),
+               BankUtil.getSQLTimeStamp(),
                false // should_commit
        );
        if (should_commit)
