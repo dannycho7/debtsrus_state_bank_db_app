@@ -325,7 +325,7 @@ public class AccountBase {
         return customers;
     }
 
-    protected ArrayList<BinaryTransaction> genBinaryTransactionsThisMonth(
+    public ArrayList<BinaryTransaction> genBinaryTransactionsThisMonth(
             Connection conn
     ) throws SQLException, IllegalArgumentException {
         String get_binary_transactions_this_month_sql = String.format("SELECT %s" +
@@ -363,7 +363,7 @@ public class AccountBase {
         return binary_transactions;
     }
 
-    protected ArrayList<CheckTransaction> genCheckTransactionsThisMonth(
+    public ArrayList<CheckTransaction> genCheckTransactionsThisMonth(
             Connection conn
     ) throws SQLException, IllegalArgumentException {
         String get_check_transactions_this_month_sql = String.format("SELECT %s" +
@@ -402,7 +402,7 @@ public class AccountBase {
         return check_transactions;
     }
 
-    protected ArrayList<UnaryTransaction> genUnaryTransactionsThisMonth(
+    public ArrayList<UnaryTransaction> genUnaryTransactionsThisMonth(
             Connection conn
     ) throws SQLException, IllegalArgumentException {
         String get_unary_transactions_this_month_sql = String.format("SELECT %s" +

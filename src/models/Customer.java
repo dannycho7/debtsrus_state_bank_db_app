@@ -3,6 +3,9 @@ package models;
 import java.sql.*;
 import java.util.ArrayList;
 import models.account.*;
+import models.transaction.*;
+import models.transaction.BinaryTransaction.BinaryTransactionType;
+import models.transaction.UnaryTransaction.UnaryTransactionType;
 
 public class Customer {
    private String tax_id;
@@ -20,6 +23,29 @@ public class Customer {
       this.name = name;
       this.address = address;
       this.pin = pin;
+   }
+
+   public static ArrayList<Customer> all(
+           Connection conn
+   ) throws SQLException {
+       ArrayList<Customer> customers = new ArrayList<Customer>();
+       String get_customers_sql = "SELECT C.tax_id, C.name, C.address, C.pin FROM Customer C";
+       Statement stmt = conn.createStatement();
+       ResultSet rs = stmt.executeQuery(get_customers_sql);
+       while (rs.next()) {
+           String tax_id = rs.getString("tax_id");
+           String name = rs.getString("name");
+           String address = rs.getString("address");
+           String pin = rs.getString("pin");
+           Customer customer = new Customer(
+                   tax_id,
+                   name,
+                   address,
+                   pin
+           );
+           customers.add(customer);
+       }
+       return customers;
    }
 
    public static void create(
@@ -140,5 +166,37 @@ public class Customer {
          accounts.add(account);
       }
       return accounts;
+   }
+
+   public ArrayList<Customer> genCustomersForDTER(
+           Connection conn
+   ) throws SQLException {
+       ArrayList<Customer> dter_customers = new ArrayList<Customer>();
+       ArrayList<Customer> customers = Customer.all(conn);
+       for (Customer customer : customers) {
+           int total = 0;
+           ArrayList<AccountBase> accounts = customer.genAccounts(conn);
+           for (AccountBase account : accounts) {
+               ArrayList<BinaryTransaction> binary_transactions = account.genBinaryTransactionsThisMonth(conn);
+               for (BinaryTransaction binary_transaction : binary_transactions) {
+                   if (binary_transaction.getInitiator() == customer.getTaxId() &&
+                           (binary_transaction.getBinaryTransactionType() == BinaryTransactionType.TRANSFER ||
+                                   binary_transaction.getBinaryTransactionType() == BinaryTransactionType.WIRE)) {
+                       total += binary_transaction.getAmount();
+                   }
+               }
+               ArrayList<UnaryTransaction> unary_transactions = account.genUnaryTransactionsThisMonth(conn);
+               for (UnaryTransaction unary_transaction : unary_transactions) {
+                   if (unary_transaction.getInitiator() == customer.getTaxId() &&
+                           unary_transaction.getUnaryTransactionType() == UnaryTransactionType.DEPOSIT) {
+                       total += unary_transaction.getAmount();
+                   }
+               }
+           }
+           if (total > 10000 * 100) {
+               dter_customers.add(customer);
+           }
+       }
+       return dter_customers;
    }
 }
