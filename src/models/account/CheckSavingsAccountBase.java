@@ -151,4 +151,15 @@ public class CheckSavingsAccountBase extends AccountBase {
         }
         return (int) (sum_total_balance_in_month / num_days_in_month);
     }
+
+    public void modifyAccountToClose(
+            Connection conn,
+            boolean should_commit
+    ) throws SQLException {
+        this.modifyAccountToClose(
+                conn,
+                false // should_commit
+        );
+    }
+
 }

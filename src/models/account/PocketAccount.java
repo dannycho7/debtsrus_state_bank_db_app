@@ -132,6 +132,10 @@ public class PocketAccount extends AccountBase {
        return linked_account_id;
    }
 
+   public void handleZeroBalance() {
+
+   }
+
    public boolean hasTransactionThisMonth(
            Connection conn
    ) throws SQLException {
@@ -152,4 +156,6 @@ public class PocketAccount extends AccountBase {
        }
        return false;
    }
+
+   public void modifyAccountToClose() {}
 }

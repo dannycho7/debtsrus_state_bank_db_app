@@ -58,6 +58,27 @@ public class AccountBase {
       this.customer_tax_id = customer_tax_id;
    }
 
+   public void modifyAccountToClose(
+           Connection conn,
+           boolean should_commit
+   ) throws SQLException, IllegalArgumentException {
+       if (this.isClosed()) {
+           throw new IllegalArgumentException("Cannot close an account that is already closed");
+       }
+       Statement stmt = conn.createStatement();
+       String modify_sql = String.format("UPDATE Account A SET A.closed = 1 WHERE A.account_id = %d" , this.account_id);
+       int n = stmt.executeUpdate(modify_sql);
+       System.out.println(n + " rows affected");
+       AccountCloseHistory.create(
+               conn,
+               account_id,
+               BankUtil.getCurrentMonthYear(),
+               false // should_commit
+       );
+       if (should_commit)
+           conn.commit();
+   }
+
    private static void createAccountOwnership(
            Connection conn,
            String customer_tax_id,
@@ -139,6 +160,13 @@ public class AccountBase {
        return customer_tax_id;
    }
 
+   public void handleZeroBalance(
+           Connection conn,
+           boolean should_commit
+   ) throws IllegalArgumentException {
+       throw new IllegalArgumentException("handleZeroBalance must be overriden by classes!");
+   }
+
    public static boolean hasInterestBeenAddedInMonth(
            Connection conn,
            String month_year_string
@@ -181,10 +209,16 @@ public class AccountBase {
            int balance,
            boolean should_commit
    ) throws SQLException, IllegalArgumentException {
+       if (this.isClosed()) {
+           throw new IllegalArgumentException("You cannot update balance of a closed account");
+       }
        if (balance < 0) {
            throw new IllegalArgumentException("Cannot change balance to negative value");
-       } else if (balance == 0) {
-           // close account
+       } else if (balance == 0 || balance == 1) {
+           this.handleZeroBalance(
+                   conn,
+                   false // should_commit
+           );
        } else {
            Statement stmt = conn.createStatement();
            String sql = String.format("UPDATE Account A SET A.balance = %d WHERE A.account_id = %d"
