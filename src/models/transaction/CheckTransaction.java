@@ -25,6 +25,7 @@ public class CheckTransaction extends TransactionBase {
             int fee,
             String initiator, // customer tax_id
             int transactor, // account_id
+            int check_no,
             CheckTransactionType check_type
     ) {
         super(
