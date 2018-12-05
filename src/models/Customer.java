@@ -81,7 +81,7 @@ public class Customer {
            boolean should_commit
    ) throws SQLException {
       String no_accounts_sql = "SELECT Ao.tax_id FROM Account_ownership Ao GROUP BY Ao.tax_id HAVING COUNT(*) = 0";
-      String delete_customers_sql = String.format("DELETE FROM Customer C" +
+      String delete_customers_sql = String.format("DELETE FROM Customer C " +
                       "WHERE C.tax_id IN (%s)"
               , no_accounts_sql
       );
@@ -96,8 +96,8 @@ public class Customer {
            Connection conn,
            String customer_tax_id
    ) throws SQLException, IllegalArgumentException {
-      String get_customer_sql = String.format("SELECT %s FROM Customer C WHERE C.tax_id = %s"
-              , "C.tax_id", "C.name", "C.address", "C.pin"
+      String get_customer_sql = String.format("SELECT %s FROM Customer C WHERE C.tax_id = %s "
+              , "C.tax_id, C.name, C.address, C.pin"
               , customer_tax_id
       );
 
