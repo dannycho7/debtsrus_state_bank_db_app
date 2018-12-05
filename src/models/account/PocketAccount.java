@@ -87,7 +87,7 @@ public class PocketAccount extends AccountBase {
        String get_pocket_account_sql = String.format("SELECT %s FROM Account A " +
                        "JOIN Pocket_account Pa ON A.account_id = Pa.account_id " +
                        "WHERE Pa.account_id = %s "
-               , "A.account_id", "A.balance", "A.closed", "A.branch_name", "A.type", "A.primary_owner", "Pa.link"
+               , "A.account_id, A.balance, A.closed, A.branch_name, A.type, A.primary_owner, Pa.link"
                , account_id
        );
 
