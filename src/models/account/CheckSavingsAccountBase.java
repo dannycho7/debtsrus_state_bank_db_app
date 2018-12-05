@@ -45,11 +45,14 @@ public class CheckSavingsAccountBase extends AccountBase {
             CheckSavingsAccountType check_savings_account_type,
             String customer_tax_id,
             boolean should_commit
-    ) throws SQLException {
+    ) throws SQLException, IllegalArgumentException {
+        if (balance == 0) {
+            throw new IllegalArgumentException("Balance for a check/savings account cannot start at 0");
+        }
         AccountBase.create(
                 conn,
                 account_id,
-                balance,
+                0, // balance starts at 0 in the creation process, but it updated via createDeposit later
                 branch_name,
                 check_savings_account_type.getCorrespondingAccountType(),
                 customer_tax_id,

@@ -29,6 +29,11 @@ public class TransactionFactory {
                 UnaryTransaction.UnaryTransactionType.DEPOSIT,
                 false // should_commit
         );
+        chk_savings_account.updateBalance(
+                conn,
+                chk_savings_account.getBalance() + amount,
+                false // should_commit
+        );
         if (should_commit)
             conn.commit();
 
