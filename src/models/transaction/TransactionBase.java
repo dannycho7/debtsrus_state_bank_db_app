@@ -25,6 +25,33 @@ abstract public class TransactionBase {
         public String getName() {
             return name;
         }
+
+        public static TransactionType fromString(String n) {
+            switch (n) {
+                case "Deposit":
+                    return TransactionType.DEPOSIT;
+                case "Top-Up":
+                    return TransactionType.TOP_UP;
+                case "Withdrawal":
+                    return TransactionType.WITHDRAWAL;
+                case "Purchase":
+                    return TransactionType.PURCHASE;
+                case "Transfer":
+                    return TransactionType.TRANSFER;
+                case "Collect":
+                    return TransactionType.COLLECT;
+                case "Pay-Friend":
+                    return TransactionType.PAY_FRIEND;
+                case "Wire":
+                    return TransactionType.WIRE;
+                case "Write-Check":
+                    return TransactionType.WRITE_CHECK;
+                case "Accrue-Interest":
+                    return TransactionType.ACCRUE_INTEREST;
+                default:
+                    return null;
+            }
+        }
     }
 
     protected int t_id;

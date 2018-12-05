@@ -119,35 +119,20 @@ public class CheckSavingsAccountBase extends AccountBase {
         return account;
     }
 
+    // NOTE: Does not work if a transaction was executed AFTER this month
     public int genAvgDailyBalanceInMonth(
             Connection conn
-    ) throws SQLException {
-        String get_transactions_this_month_sql = String.format("SELECT %s" +
-                        "FROM Transaction T" +
-                        "LEFT JOIN Binary_transaction Bt ON T.t_id = Bt.t_id" +
-                        "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND (T.transactor = %d OR Bt.operand = %d)"
-                , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type, Bt.operand"
-                , BankUtil.getCurrentMonthYear()
-                , this.account_id
-                , this.account_id
-        );
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(get_transactions_this_month_sql);
+    ) throws SQLException, IllegalArgumentException {
         int num_days_in_month = BankUtil.getNumDaysInCurrentMonth();
+        int[] delta_per_day = this.genDeltasFromTransactionsThisMonth(conn);
+        int[] balance_per_day = new int[num_days_in_month];
+        balance_per_day[num_days_in_month - 1] = this.getBalance();
+        for (int i = num_days_in_month - 2; i >= 0; i--) {
+            balance_per_day[i] = balance_per_day[i + 1] - delta_per_day[i + 1];
+        }
         int sum_total_balance_in_month = 0;
-        while (rs.next()) {
-            int t_id = rs.getInt("t_id");
-            int amount = rs.getInt("amount");
-            String timestamp = rs.getString("timestamp");
-            int fee = rs.getInt("fee");
-            String initiator = rs.getString("initiator");
-            int transactor = rs.getInt("transactor");
-            String type = rs.getString("type");
-            int operand = rs.getInt("operand");
-
-            // TODO:
-            // use (transactor, operand, type) 3-tuple to figure out delta +/- in balance from this transaction
-            // add to sum_total_balance_in_month
+        for (int balance : balance_per_day) {
+            sum_total_balance_in_month += balance;
         }
         return (int) (sum_total_balance_in_month / num_days_in_month);
     }

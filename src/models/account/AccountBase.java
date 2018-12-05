@@ -2,8 +2,10 @@ package models.account;
 
 import bank_util.*;
 import java.sql.*;
+import java.util.ArrayList;
 import models.Customer;
 import models.transaction.*;
+import models.transaction.TransactionBase.TransactionType;
 
 public class AccountBase {
 	public enum AccountType {
@@ -56,6 +58,27 @@ public class AccountBase {
       this.branch_name = branch_name;
       this.acct_type = acct_type;
       this.customer_tax_id = customer_tax_id;
+   }
+
+   public void addInterestToAllOpen(
+       Connection conn,
+       String initiator, // customer tax_id
+       boolean should_commit
+   ) throws SQLException, IllegalArgumentException {
+        if (AccountBase.hasInterestBeenAddedThisMonth(conn)) {
+            throw new IllegalArgumentException("Interest has already been added for this month");
+        }
+        ArrayList<Integer> account_ids = AccountBase.genAllOpenAccountIds(conn);
+        for (int account_id : account_ids) {
+            TransactionFactory.createAccrueInterest(
+                    conn,
+                    initiator,
+                    account_id,
+                    false // should_commit
+            );
+        }
+        if (should_commit)
+            conn.commit();
    }
 
    public void modifyAccountToClose(
@@ -160,6 +183,103 @@ public class AccountBase {
        return customer_tax_id;
    }
 
+    // use (transactor, operand, type) 3-tuple to figure out delta +/- in balance from this transaction
+    protected int getDeltaFromTransactionMetadata(
+            int transactor,
+            int operand,
+            String type,
+            int amount,
+            int fee
+    ) throws IllegalArgumentException {
+        boolean is_transactor = (this.account_id == transactor);
+        boolean is_operand = (this.account_id == operand);
+        if (!is_transactor && !is_operand) {
+            throw new IllegalArgumentException("Account is neither the transactor nor the operand");
+        }
+        switch (TransactionType.fromString(type)) {
+            case DEPOSIT:
+            case ACCRUE_INTEREST:
+                return amount;
+            case TOP_UP:
+                if (is_transactor) {
+                    return amount - fee;
+                } else {
+                    return -1 * amount;
+                }
+            case WITHDRAWAL:
+            case PURCHASE:
+            case WRITE_CHECK:
+                return -1 * amount;
+            case TRANSFER:
+            case COLLECT:
+            case PAY_FRIEND:
+            case WIRE:
+                if (is_transactor) {
+                    return -1 * (amount + fee);
+                } else {
+                    return amount;
+                }
+            default:
+                throw new IllegalArgumentException("Inexhaustive case");
+        }
+    }
+
+   public static ArrayList<Integer> genAllOpenAccountIds(
+           Connection conn
+   ) throws SQLException {
+       ArrayList<Integer> account_ids = new ArrayList<Integer>();
+       String get_open_account_id_sql = String.format("SELECT %s FROM Account A WHERE A.closed = 0"
+               , "A.account_id"
+       );
+       Statement stmt = conn.createStatement();
+       ResultSet rs = stmt.executeQuery(get_open_account_id_sql);
+       while (rs.next()) {
+           int account_id = rs.getInt("account_id");
+           account_ids.add(account_id);
+       }
+       return account_ids;
+   }
+
+   protected int[] genDeltasFromTransactionsThisMonth(
+           Connection conn
+   ) throws SQLException, IllegalArgumentException {
+       String get_transactions_this_month_sql = String.format("SELECT %s" +
+                       "FROM Transaction T" +
+                       "LEFT JOIN Binary_transaction Bt ON T.t_id = Bt.t_id" +
+                       "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND (T.transactor = %d OR Bt.operand = %d)"
+               , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type, Bt.operand"
+               , BankUtil.getCurrentMonthYear()
+               , this.account_id
+               , this.account_id
+       );
+       Statement stmt = conn.createStatement();
+       ResultSet rs = stmt.executeQuery(get_transactions_this_month_sql);
+       int num_days_in_month = BankUtil.getNumDaysInCurrentMonth();
+       int[] delta_per_day = new int[num_days_in_month];
+       while (rs.next()) {
+           int t_id = rs.getInt("t_id");
+           int amount = rs.getInt("amount");
+           String timestamp = rs.getString("timestamp");
+           int fee = rs.getInt("fee");
+           String initiator = rs.getString("initiator");
+           int transactor = rs.getInt("transactor");
+           String type = rs.getString("type");
+           int operand = rs.getInt("operand");
+
+           int day = Integer.parseInt(timestamp.split("-")[0]);
+
+           int delta = getDeltaFromTransactionMetadata(
+                   transactor,
+                   operand,
+                   type,
+                   amount,
+                   fee
+           );
+           delta_per_day[day - 1] += delta;
+       }
+       return delta_per_day;
+   }
+
    public void handleZeroBalance(
            Connection conn,
            boolean should_commit
@@ -167,15 +287,14 @@ public class AccountBase {
        throw new IllegalArgumentException("handleZeroBalance must be overriden by classes!");
    }
 
-   public static boolean hasInterestBeenAddedInMonth(
-           Connection conn,
-           String month_year_string
+   public static boolean hasInterestBeenAddedThisMonth(
+           Connection conn
    ) throws SQLException {
        String find_interest_sql = String.format("SELECT %s FROM Transaction T" +
                        "WHERE T.type = '%s' AND TO_CHAR(T.timestamp, 'MM-YYYY') = '%s'"
                , "T.t_id"
                , TransactionBase.TransactionType.ACCRUE_INTEREST.getName()
-               , month_year_string
+               , BankUtil.getCurrentMonthYear()
        );
        Statement stmt = conn.createStatement();
        ResultSet rs = stmt.executeQuery(find_interest_sql);
