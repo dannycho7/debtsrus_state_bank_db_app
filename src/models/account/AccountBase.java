@@ -105,10 +105,11 @@ public class AccountBase {
            conn.commit();
    }
 
-   private static void createAccountOwnership(
+   public static void createAccountOwnership(
            Connection conn,
            String customer_tax_id,
-           int account_id
+           int account_id,
+           boolean should_commit
    ) throws SQLException {
        Statement stmt = conn.createStatement();
        String sql = String.format("INSERT INTO Account_ownership %s VALUES ('%s', %d)"
@@ -118,6 +119,8 @@ public class AccountBase {
        );
        int n = stmt.executeUpdate(sql);
        System.out.println(n + " rows affected");
+       if (should_commit)
+           conn.commit();
    }
 
    protected static void create(
@@ -145,7 +148,8 @@ public class AccountBase {
       AccountBase.createAccountOwnership(
               conn,
               customer_tax_id,
-              account_id
+              account_id,
+              false // should_commit
       );
       if (should_commit)
           conn.commit();
