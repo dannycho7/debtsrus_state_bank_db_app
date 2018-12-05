@@ -137,6 +137,23 @@ public class CheckSavingsAccountBase extends AccountBase {
         return (int) (sum_total_balance_in_month / num_days_in_month);
     }
 
+    public double genInterestRate(
+            Connection conn
+    ) throws SQLException, IllegalArgumentException {
+        String get_account_type_sql = String.format("SELECT %s FROM Account_type At" +
+                        "WHERE At.name = '%s'"
+                , "At.interest_rate"
+                , this.acct_type.getName()
+        );
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(get_account_type_sql);
+        while (rs.next()) {
+            double interest_rate = rs.getDouble("interest_rate");
+            return interest_rate;
+        }
+        throw new IllegalArgumentException("No such account type exists");
+    }
+
     public void modifyAccountToClose(
             Connection conn,
             boolean should_commit
@@ -146,5 +163,4 @@ public class CheckSavingsAccountBase extends AccountBase {
                 false // should_commit
         );
     }
-
 }

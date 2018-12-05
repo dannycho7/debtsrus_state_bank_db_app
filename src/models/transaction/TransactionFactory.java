@@ -394,7 +394,8 @@ public class TransactionFactory {
             boolean should_commit
     ) throws SQLException, IllegalArgumentException {
         CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.findOpen(conn, transactor);
-        int amount = chk_savings_account.genAvgDailyBalanceInMonth(conn);
+        double interest_rate = chk_savings_account.genInterestRate(conn);
+        int amount = (int) (chk_savings_account.genAvgDailyBalanceInMonth(conn) * interest_rate);
         String timestamp = BankUtil.getSQLTimeStamp();
         chk_savings_account.updateBalance(
                 conn,
