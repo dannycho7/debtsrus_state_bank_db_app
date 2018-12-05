@@ -22,6 +22,7 @@ public class ATMAppInterface extends JPanel{
         this.add(getDepositButton());
         this.add(getTopUpButton());
         this.add(getWithdrawalButton());
+        this.add(getPurchaseButton());
     }
 
     public JButton getDepositButton() {
@@ -50,5 +51,14 @@ public class ATMAppInterface extends JPanel{
             }
         });
         return withdrawal_btn;
+    }
+    public JButton getPurchaseButton() {
+        JButton purchase_btn = new JButton("Purchase");
+        purchase_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                PurchasePanel.openPurchaseDialog(conn, logged_in_customer_id);
+            }
+        });
+        return purchase_btn;
     }
 }
