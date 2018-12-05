@@ -27,6 +27,7 @@ public class ATMAppInterface extends JPanel{
         this.add(getTransferButton());
         this.add(getCollectButton());
         this.add(getPayFriendButton());
+        this.add(getWireButton());
     }
 
     public JButton getDepositButton() {
@@ -91,5 +92,14 @@ public class ATMAppInterface extends JPanel{
             }
         });
         return pay_friend_btn;
+    }
+    public JButton getWireButton() {
+        JButton wire_btn = new JButton("Wire");
+        wire_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                WirePanel.openWireDialog(conn, logged_in_customer_id);
+            }
+        });
+        return wire_btn;
     }
 }
