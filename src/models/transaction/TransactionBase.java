@@ -110,14 +110,14 @@ abstract public class TransactionBase {
         return t_id;
     }
 
-    public static void deleteForOnAndBeforeMonth(
+    public static void deleteForBeforeMonth(
             Connection conn,
-            String month_year_string,
             boolean should_commit
     ) throws SQLException {
-        String delete_transactions_sql = String.format("DELETE FROM Transaction T" +
-                        "WHERE '%s' >= TO_CHAR(T.timestamp, 'YYYY-MM')"
-                , month_year_string
+        String year_month_string = BankUtil.getCurrentYearMonth();
+        String delete_transactions_sql = String.format("DELETE FROM Transaction T " +
+                        "WHERE '%s' > TO_CHAR(T.timestamp, 'YYYY-MM')"
+                , year_month_string
         );
         Statement stmt = conn.createStatement();
         int n = stmt.executeUpdate(delete_transactions_sql);

@@ -8,6 +8,10 @@ abstract public class BankUtil {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-yyyy");
         return simpleDateFormat.format(new java.util.Date());
     }
+    public static String getCurrentYearMonth() {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
+        return simpleDateFormat.format(new java.util.Date());
+    }
     public static int getNumDaysInCurrentMonth() {
         Calendar calendar = Calendar.getInstance();
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);

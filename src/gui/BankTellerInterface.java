@@ -4,6 +4,7 @@ import gui.bank_teller_panels.*;
 
 import bank_util.*;
 import models.*;
+import models.transaction.*;
 import models.account.*;
 
 import java.awt.*;
@@ -21,6 +22,7 @@ public class BankTellerInterface extends JPanel{
         this.add(getAddAccountButton());
         this.add(getWriteCheckButton());
         this.add(getAddInterestButton());
+        this.add(getDeleteTransactionsButton());
     }
 
     public JButton getAddAccountButton() {
@@ -66,5 +68,29 @@ public class BankTellerInterface extends JPanel{
             }
         });
         return add_interest_btn;
+    }
+
+    public JButton getDeleteTransactionsButton() {
+        JButton delete_transactions_btn = new JButton("Delete Transactions");
+        delete_transactions_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    TransactionBase.deleteForBeforeMonth(
+                            conn,
+                            false // should_commit
+                    );
+                    conn.commit();
+                    JOptionPane.showMessageDialog(null, "Successfully deleted all transactions before this month.");
+                } catch (SQLException se) {
+                    se.printStackTrace();
+                    JDBCConnectionManager.rollbackConn(conn);
+                } catch (IllegalArgumentException ex) {
+                    ex.printStackTrace();
+                    JDBCConnectionManager.rollbackConn(conn);
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
+            }
+        });
+        return delete_transactions_btn;
     }
 }
