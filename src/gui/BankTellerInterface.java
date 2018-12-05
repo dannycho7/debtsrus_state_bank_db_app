@@ -19,6 +19,7 @@ public class BankTellerInterface extends JPanel{
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.add(new JLabel("Bank Teller Interface"));
         this.add(getAddAccountButton());
+        this.add(getWriteCheckButton());
     }
 
     public JButton getAddAccountButton() {
@@ -29,5 +30,15 @@ public class BankTellerInterface extends JPanel{
             }
         });
         return add_account_btn;
+    }
+
+    public JButton getWriteCheckButton() {
+        JButton write_check_btn = new JButton("Write-Check");
+        write_check_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                WriteCheckPanel.openWriteCheckDialog(conn);
+            }
+        });
+        return write_check_btn;
     }
 }

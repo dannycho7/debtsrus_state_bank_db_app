@@ -1,4 +1,4 @@
-package gui.atm_panels;
+package gui.bank_teller_panels;
 
 import bank_util.*;
 import models.*;
@@ -12,14 +12,13 @@ import java.text.NumberFormat;
 
 public class WriteCheckPanel extends Panel {
     private Connection conn;
-    private String logged_in_customer_id;
 
+    private JTextField customer_id_field = new JTextField(9);
     private JFormattedTextField check_account_id_field;
     private JFormattedTextField amount_field;
 
-    public WriteCheckPanel(Connection conn, String logged_in_customer_id) {
+    public WriteCheckPanel(Connection conn) {
         this.conn = conn;
-        this.logged_in_customer_id = logged_in_customer_id;
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         NumberFormat format = NumberFormat.getIntegerInstance();
         format.setGroupingUsed(false);
@@ -28,6 +27,8 @@ public class WriteCheckPanel extends Panel {
         amount_field = new JFormattedTextField(format);
         amount_field.setColumns(10);
 
+        this.add(new JLabel("Customer Tax Id (9 digits):"));
+        this.add(customer_id_field);
         this.add(new JLabel("Check Account Id:"));
         this.add(check_account_id_field);
         this.add(new JLabel("Amount:"));
@@ -35,19 +36,20 @@ public class WriteCheckPanel extends Panel {
     }
 
     public void handleSubmit() throws SQLException {
+        String customer_id = customer_id_field.getText();
         int check_account_id = ((Number) check_account_id_field.getValue()).intValue();
         int amount = ((Number) amount_field.getValue()).intValue();
         TransactionFactory.createWriteCheck(
                 conn,
                 amount,
-                logged_in_customer_id, // initiator
+                customer_id, // initiator
                 check_account_id, // transactor
                 false // should_commit
         );
     }
 
-    public static void openWriteCheckDialog(Connection conn, String logged_in_customer_id) {
-        WriteCheckPanel write_check_pane = new WriteCheckPanel(conn, logged_in_customer_id);
+    public static void openWriteCheckDialog(Connection conn) {
+        WriteCheckPanel write_check_pane = new WriteCheckPanel(conn);
         int result = JOptionPane.showConfirmDialog(
                 null,
                 write_check_pane,
