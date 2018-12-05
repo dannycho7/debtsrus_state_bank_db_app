@@ -3,6 +3,7 @@ package models.account;
 import bank_util.*;
 import java.sql.*;
 import models.Customer;
+import models.transaction.*;
 
 public class AccountBase {
 	public enum AccountType {
@@ -136,6 +137,25 @@ public class AccountBase {
    }
    public String getCustomerTaxId() {
        return customer_tax_id;
+   }
+
+   public static boolean hasInterestBeenAddedInMonth(
+           Connection conn,
+           String month_year_string
+   ) throws SQLException {
+       String find_interest_sql = String.format("SELECT %s FROM Transaction T" +
+                       "WHERE T.type = '%s' AND TO_CHAR(T.timestamp, 'MM-YYYY') = '%s'"
+               , "T.t_id"
+               , TransactionBase.TransactionType.ACCRUE_INTEREST.getName()
+               , month_year_string
+       );
+       Statement stmt = conn.createStatement();
+       ResultSet rs = stmt.executeQuery(find_interest_sql);
+       while (rs.next()) {
+           int t_id = rs.getInt("t_id");
+           return true;
+       }
+       return false;
    }
 
    public static boolean hasOwner(

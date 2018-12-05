@@ -22,7 +22,7 @@ abstract public class TransactionBase {
             name = n;
         }
 
-        protected String getName() {
+        public String getName() {
             return name;
         }
     }
