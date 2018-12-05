@@ -56,7 +56,7 @@ public class CheckingAccount extends CheckSavingsAccountBase {
               account_id,
               balance,
               branch_name,
-              CheckSavingsAccountType.STUDENT_CHECKING,
+              CheckSavingsAccountType.INTEREST_CHECKING,
               customer_tax_id,
               false // should_commit
       );
@@ -75,7 +75,7 @@ public class CheckingAccount extends CheckSavingsAccountBase {
               account_id,
               balance,
               branch_name,
-              CheckSavingsAccountType.INTEREST_CHECKING,
+              CheckSavingsAccountType.STUDENT_CHECKING,
               customer_tax_id,
               false // should_commit
       );
