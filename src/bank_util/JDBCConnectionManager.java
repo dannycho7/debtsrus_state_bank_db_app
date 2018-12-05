@@ -1,3 +1,5 @@
+package bank_util;
+
 import java.sql.*;
 
 public class JDBCConnectionManager {
