@@ -2,6 +2,7 @@ package models.account;
 
 import bank_util.*;
 import java.sql.*;
+import java.util.ArrayList;
 import models.transaction.*;
 
 public class CheckSavingsAccountBase extends AccountBase {
@@ -35,6 +36,27 @@ public class CheckSavingsAccountBase extends AccountBase {
                 acct_type,
                 customer_tax_id
         );
+    }
+
+    public static void addInterestToAllOpen(
+            Connection conn,
+            String initiator, // customer tax_id
+            boolean should_commit
+    ) throws SQLException, IllegalArgumentException {
+        if (AccountBase.hasInterestBeenAddedThisMonth(conn)) {
+            throw new IllegalArgumentException("Interest has already been added for this month");
+        }
+        ArrayList<Integer> account_ids = CheckSavingsAccountBase.genAllOpenAccountIds(conn);
+        for (int account_id : account_ids) {
+            TransactionFactory.createAccrueInterest(
+                    conn,
+                    initiator,
+                    account_id,
+                    false // should_commit
+            );
+        }
+        if (should_commit)
+            conn.commit();
     }
 
     public static void create(
@@ -138,6 +160,23 @@ public class CheckSavingsAccountBase extends AccountBase {
             sum_total_balance_in_month += balance;
         }
         return (int) (sum_total_balance_in_month / num_days_in_month);
+    }
+
+    public static ArrayList<Integer> genAllOpenAccountIds(
+            Connection conn
+    ) throws SQLException {
+        ArrayList<Integer> account_ids = new ArrayList<Integer>();
+        String get_open_account_id_sql = String.format("SELECT %s FROM Account A " +
+                        "JOIN Check_savings_account Csa ON A.account_id = Csa.account_id WHERE A.closed = 0"
+                , "A.account_id"
+        );
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(get_open_account_id_sql);
+        while (rs.next()) {
+            int account_id = rs.getInt("account_id");
+            account_ids.add(account_id);
+        }
+        return account_ids;
     }
 
     public double genInterestRate(

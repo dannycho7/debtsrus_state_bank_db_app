@@ -63,27 +63,6 @@ public class AccountBase {
        this.customer_tax_id = customer_tax_id;
    }
 
-   public void addInterestToAllOpen(
-       Connection conn,
-       String initiator, // customer tax_id
-       boolean should_commit
-   ) throws SQLException, IllegalArgumentException {
-        if (AccountBase.hasInterestBeenAddedThisMonth(conn)) {
-            throw new IllegalArgumentException("Interest has already been added for this month");
-        }
-        ArrayList<Integer> account_ids = AccountBase.genAllOpenAccountIds(conn);
-        for (int account_id : account_ids) {
-            TransactionFactory.createAccrueInterest(
-                    conn,
-                    initiator,
-                    account_id,
-                    false // should_commit
-            );
-        }
-        if (should_commit)
-            conn.commit();
-   }
-
    protected void modifyAccountToClose(
            Connection conn,
            boolean should_commit
@@ -231,22 +210,6 @@ public class AccountBase {
         }
     }
 
-    public static ArrayList<Integer> genAllOpenAccountIds(
-            Connection conn
-    ) throws SQLException {
-        ArrayList<Integer> account_ids = new ArrayList<Integer>();
-        String get_open_account_id_sql = String.format("SELECT %s FROM Account A WHERE A.closed = 0"
-                , "A.account_id"
-        );
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(get_open_account_id_sql);
-        while (rs.next()) {
-            int account_id = rs.getInt("account_id");
-            account_ids.add(account_id);
-        }
-        return account_ids;
-    }
-
    protected int[] genDeltasFromTransactionsThisMonth(
            Connection conn
    ) throws SQLException, IllegalArgumentException {
@@ -254,7 +217,7 @@ public class AccountBase {
                        "FROM Transaction T " +
                        "LEFT JOIN Binary_transaction Bt ON T.t_id = Bt.t_id " +
                        "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND (T.transactor = %d OR Bt.operand = %d)"
-               , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type, Bt.operand"
+               , "T.t_id, T.amount, TO_CHAR(T.timestamp, 'DD') AS timestamp_day, T.fee, T.initiator, T.transactor, T.type, Bt.operand"
                , BankUtil.getCurrentMonthYear()
                , this.account_id
                , this.account_id
@@ -266,14 +229,14 @@ public class AccountBase {
        while (rs.next()) {
            int t_id = rs.getInt("t_id");
            int amount = rs.getInt("amount");
-           String timestamp = rs.getString("timestamp");
+           String timestamp_day = rs.getString("timestamp_day");
            int fee = rs.getInt("fee");
            String initiator = rs.getString("initiator");
            int transactor = rs.getInt("transactor");
            String type = rs.getString("type");
            int operand = rs.getInt("operand");
 
-           int day = Integer.parseInt(timestamp.split("-")[0]);
+           int day = Integer.parseInt(timestamp_day);
 
            int delta = getDeltaFromTransactionMetadata(
                    transactor,

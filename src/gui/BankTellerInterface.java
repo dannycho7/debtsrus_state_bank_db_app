@@ -20,6 +20,7 @@ public class BankTellerInterface extends JPanel{
         this.add(new JLabel("Bank Teller Interface"));
         this.add(getAddAccountButton());
         this.add(getWriteCheckButton());
+        this.add(getAddInterestButton());
     }
 
     public JButton getAddAccountButton() {
@@ -40,5 +41,30 @@ public class BankTellerInterface extends JPanel{
             }
         });
         return write_check_btn;
+    }
+
+    public JButton getAddInterestButton() {
+        JButton add_interest_btn = new JButton("Add-Interest");
+        add_interest_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    CheckSavingsAccountBase.addInterestToAllOpen(
+                            conn,
+                            "000000000", // admin customer
+                            false // should_commit
+                    );
+                    conn.commit();
+                    JOptionPane.showMessageDialog(null, "Successfully added interest to all open accounts.");
+                } catch (SQLException se) {
+                    se.printStackTrace();
+                    JDBCConnectionManager.rollbackConn(conn);
+                } catch (IllegalArgumentException ex) {
+                    ex.printStackTrace();
+                    JDBCConnectionManager.rollbackConn(conn);
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
+            }
+        });
+        return add_interest_btn;
     }
 }
