@@ -25,6 +25,7 @@ public class ATMAppInterface extends JPanel{
         this.add(getWithdrawalButton());
         this.add(getPurchaseButton());
         this.add(getTransferButton());
+        this.add(getPayFriendButton());
     }
 
     public JButton getDepositButton() {
@@ -71,5 +72,14 @@ public class ATMAppInterface extends JPanel{
             }
         });
         return transfer_btn;
+    }
+    public JButton getPayFriendButton() {
+        JButton pay_friend_btn = new JButton("PayFriend");
+        pay_friend_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                PayFriendPanel.openPayFriendDialog(conn, logged_in_customer_id);
+            }
+        });
+        return pay_friend_btn;
     }
 }
