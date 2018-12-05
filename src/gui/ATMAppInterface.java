@@ -28,6 +28,7 @@ public class ATMAppInterface extends JPanel{
         this.add(getCollectButton());
         this.add(getPayFriendButton());
         this.add(getWireButton());
+        this.add(getWriteCheckButton());
     }
 
     public JButton getDepositButton() {
@@ -101,5 +102,14 @@ public class ATMAppInterface extends JPanel{
             }
         });
         return wire_btn;
+    }
+    public JButton getWriteCheckButton() {
+        JButton write_check_btn = new JButton("Write-Check");
+        write_check_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                WriteCheckPanel.openWriteCheckDialog(conn, logged_in_customer_id);
+            }
+        });
+        return write_check_btn;
     }
 }
