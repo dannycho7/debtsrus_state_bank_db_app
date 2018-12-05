@@ -159,8 +159,8 @@ public class TransactionFactory {
             Connection conn,
             int amount,
             String initiator, // customer tax_id
-            int transactor, // pocket account_id
-            int operand, // account_id
+            int transactor, // from account_id
+            int operand, // to account_id
             boolean should_commit
     ) throws SQLException, IllegalArgumentException {
         if (amount > 2000 * 100) {

@@ -461,13 +461,15 @@ public class AccountBase {
         return false;
     }
 
-    public static boolean hasOwner(
+    public boolean hasOwner(
            Connection conn,
            String owner
     ) throws SQLException {
-        String find_owner_sql = String.format("SELECT %s FROM Account_ownership Ao WHERE Ao.tax_id = '%s'"
+        String find_owner_sql = String.format("SELECT %s FROM Account_ownership Ao " +
+                        "WHERE Ao.tax_id = '%s' AND Ao.account_id=%d"
                 , "Ao.tax_id, Ao.account_id"
                 , owner
+                , account_id
         );
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(find_owner_sql);
