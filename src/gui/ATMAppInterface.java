@@ -18,11 +18,13 @@ public class ATMAppInterface extends JPanel{
     public ATMAppInterface(Connection conn) {
         super();
         this.conn = conn;
+        this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.add(new JLabel("ATM App Interface"));
         this.add(getDepositButton());
         this.add(getTopUpButton());
         this.add(getWithdrawalButton());
         this.add(getPurchaseButton());
+        this.add(getTransferButton());
     }
 
     public JButton getDepositButton() {
@@ -60,5 +62,14 @@ public class ATMAppInterface extends JPanel{
             }
         });
         return purchase_btn;
+    }
+    public JButton getTransferButton() {
+        JButton transfer_btn = new JButton("Transfer");
+        transfer_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                TransferPanel.openTransferDialog(conn, logged_in_customer_id);
+            }
+        });
+        return transfer_btn;
     }
 }
