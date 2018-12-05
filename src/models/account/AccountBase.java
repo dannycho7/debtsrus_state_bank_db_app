@@ -258,7 +258,7 @@ public class AccountBase {
        int[] delta_per_day = this.genDeltasFromTransactionsThisMonth(conn);
        int balance = this.getBalance();
        for (int i = num_days_in_month - 1; i >= 0; i--) {
-           balance -= delta_per_day[i + 1];
+           balance -= delta_per_day[i];
        }
        return balance;
     }
@@ -268,7 +268,7 @@ public class AccountBase {
     ) throws SQLException {
         ArrayList<Customer> customers = new ArrayList<Customer>();
         String find_customers_sql = String.format("SELECT %s " +
-                        "Customer C " +
+                        "FROM Customer C " +
                         "JOIN Account_ownership Ao ON C.tax_id = Ao.tax_id " +
                         "WHERE Ao.account_id = '%s'"
                 , "C.tax_id, C.name, C.address, C.pin"

@@ -138,7 +138,7 @@ public class Customer {
    ) throws SQLException {
       ArrayList<AccountBase> accounts = new ArrayList<AccountBase>();
       String find_accounts_sql = String.format("SELECT %s " +
-                      "Account A " +
+                      "FROM Account A " +
                       "JOIN Account_ownership Ao ON A.account_id = Ao.account_id " +
                       "WHERE Ao.tax_id = '%s' "
               , "A.account_id, A.balance, A.closed, A.branch_name, A.type, A.primary_owner"
