@@ -24,7 +24,7 @@ public class AccountCloseHistory {
     ) throws SQLException {
         Statement stmt = conn.createStatement();
 
-        String sql = String.format("INSERT INTO Account_close_history %s VALUES (%d, '%s')"
+        String sql = String.format("INSERT INTO Account_close_history %s VALUES (%d, %s)"
                 , "(account_id, timestamp)"
                 , account_id
                 , String.format("TO_DATE('%s', 'YYYY-MM-DD')", timestamp)
