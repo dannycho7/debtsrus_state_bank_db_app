@@ -6,6 +6,7 @@
     <property name="jar.dir"     value="${build.dir}/jar"/>
     <property name="lib.dir"     value="lib"/>
     <property name="main-class"  value="gui.Bank"/>
+    <property name="seed-class"  value="InitDB"/>
 
     <target name="clean">
         <delete dir="${build.dir}"/>
@@ -28,6 +29,16 @@
         </jar>
     </target>
 
+    <target name="seed-jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}-seed.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${seed-class}"/>
+            </manifest>
+            <zipgroupfileset dir="${lib.dir}" includes="**/*.jar"/>
+        </jar>
+    </target>
+
     <target name="run" depends="jar">
         <java jar="${jar.dir}/${ant.project.name}.jar" fork="true">
             <sysproperty key="oracle.jdbc.Trace" value="true"/>
@@ -35,8 +46,16 @@
         </java>
     </target>
 
+    <target name="run-seed" depends="seed-jar">
+        <java jar="${jar.dir}/${ant.project.name}-seed.jar" fork="true">
+            <sysproperty key="oracle.jdbc.Trace" value="true"/>
+            <sysproperty key="java.util.logging.config.file" value="OracleLog.properties"/>
+        </java>
+    </target>
+
+
     <target name="clean-build" depends="clean,jar"/>
 
     <target name="main" depends="clean,run"/>
-
+    <target name="seed" depends="clean,run-seed"/>
 </project>
