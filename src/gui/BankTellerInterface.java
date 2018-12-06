@@ -28,6 +28,7 @@ public class BankTellerInterface extends JPanel{
         this.add(getListClosedAccountsButton());
         this.add(getGenerateMonthlyStatementsButton());
         this.add(getCustomerReportButton());
+        this.add(getGenerateGovernmentDTERButton());
     }
 
     public JButton getAddAccountButton() {
@@ -159,5 +160,34 @@ public class BankTellerInterface extends JPanel{
             }
         });
         return customer_report_btn;
+    }
+    public JButton getGenerateGovernmentDTERButton() {
+        JButton generate_government_DTER_btn = new JButton("Generate Government DTER");
+        generate_government_DTER_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ArrayList<Customer> qualified_customers = Customer.genCustomersForDTER(conn);
+                    JTextArea monthly_statement = new JTextArea();
+                    monthly_statement.setEditable(false);
+                    for (Customer customer : qualified_customers) {
+                        monthly_statement.append(String.format("Customer tax id: %s", customer.getTaxId()));
+                    }
+                    JScrollPane scroll_pane = new JScrollPane(monthly_statement);
+                    scroll_pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                    scroll_pane.setPreferredSize(new Dimension(500, 500));
+                    JOptionPane.showMessageDialog(
+                            null,
+                            scroll_pane,
+                            "Government DTER",
+                            JOptionPane.PLAIN_MESSAGE
+                    );                } catch (SQLException se) {
+                    se.printStackTrace();
+                } catch (IllegalArgumentException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
+            }
+        });
+        return generate_government_DTER_btn;
     }
 }
