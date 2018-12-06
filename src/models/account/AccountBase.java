@@ -317,13 +317,14 @@ public class AccountBase {
             BinaryTransactionType binary_type = BinaryTransactionType.fromString(rs.getString("type"));
             int operand = rs.getInt("operand");
             BinaryTransaction binary_transaction = new BinaryTransaction(
-                t_id,
-                amount,
-                timestamp,
-                fee,
-                initiator, // customer tax_id
-                transactor, // account_id
-                binary_type
+                    t_id,
+                    amount,
+                    timestamp,
+                    fee,
+                    initiator, // customer tax_id
+                    transactor, // account_id
+                    operand,
+                    binary_type
             );
             binary_transactions.add(binary_transaction);
         }

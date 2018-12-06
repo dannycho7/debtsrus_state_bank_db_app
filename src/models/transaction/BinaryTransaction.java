@@ -35,6 +35,7 @@ public class BinaryTransaction extends TransactionBase {
         }
     }
 
+    protected int operand;
     protected BinaryTransactionType binary_type;
 
     public BinaryTransaction(
@@ -43,7 +44,8 @@ public class BinaryTransaction extends TransactionBase {
             String timestamp,
             int fee,
             String initiator, // customer tax_id
-            int transactor, // account_id
+            int transactor, // transactor account_id
+            int operand, // operand account_id
             BinaryTransactionType binary_type
     ) {
         super(
@@ -55,6 +57,7 @@ public class BinaryTransaction extends TransactionBase {
                 transactor,
                 binary_type.getCorrespondingTransactionType()
         );
+        this.operand = operand;
         this.binary_type = binary_type;
     }
 
@@ -95,6 +98,9 @@ public class BinaryTransaction extends TransactionBase {
         return t_id;
     }
 
+    public int getOperand() {
+        return operand;
+    }
     public BinaryTransactionType getBinaryTransactionType() {
         return binary_type;
     }
