@@ -72,7 +72,7 @@ public class GenerateMonthlyStatementPanel extends Panel {
                                 "Moved %s from Check/Savings account %d to Check/Savings Account %d on %s";
                 }
                 String transaction_msg = String.format(
-                        transaction_format_string,
+                        "*** " + transaction_format_string,
                         BankUtil.getMoneyString(binary_transaction.getFee()),
                         BankUtil.getMoneyString(binary_transaction.getAmount()),
                         binary_transaction.getTransactor(),
@@ -114,7 +114,7 @@ public class GenerateMonthlyStatementPanel extends Panel {
                 String transaction_format_string = "";
                 transaction_format_string = "(Write-Check, Fee %s) Account %d wrote check #%s worth %s on %s";
                 String transaction_msg = String.format(
-                        transaction_format_string,
+                        "*** " + transaction_format_string,
                         BankUtil.getMoneyString(check_transaction.getFee()),
                         check_transaction.getTransactor(),
                         check_transaction.getCheckNo(),
@@ -129,7 +129,7 @@ public class GenerateMonthlyStatementPanel extends Panel {
                 String transaction_format_string = "";
                 transaction_format_string = "(Accrue-Interest, Fee %s) Account %d received %s in interest on %s";
                 String transaction_msg = String.format(
-                        transaction_format_string,
+                        "*** " + transaction_format_string,
                         BankUtil.getMoneyString(accrue_interest_transaction.getFee()),
                         accrue_interest_transaction.getTransactor(),
                         BankUtil.getMoneyString(accrue_interest_transaction.getAmount()),
