@@ -53,30 +53,31 @@ public class GenerateMonthlyStatementPanel extends Panel {
                 switch (binary_transaction.getBinaryTransactionType()) {
                     case TOP_UP:
                         transaction_format_string = "(Top-Up, Fee %s) " +
-                                "Moved %s to Pocket Account %d from Check/Savings account %d";
+                                "Moved %s to Pocket Account %d from Check/Savings account %d on %s";
                         break;
                     case TRANSFER:
                         transaction_format_string = "(Transfer, Fee %s) " +
-                                "Moved %s from Check/Savings account %d to Check/Savings Account %d";
+                                "Moved %s from Check/Savings account %d to Check/Savings Account %d on %s";
                         break;
                     case COLLECT:
                         transaction_format_string = "(Collect, Fee %s) " +
-                                "Moved %s from Check/Savings account %d to Pocket Account %d";
+                                "Moved %s from Check/Savings account %d to Pocket Account %d on %s";
                         break;
                     case PAY_FRIEND:
                         transaction_format_string = "(Pay-Friend, Fee %s) " +
-                                "Moved %s from Pocket account %d to Pocket Account %d";
+                                "Moved %s from Pocket account %d to Pocket Account %d on %s";
                         break;
                     case WIRE:
                         transaction_format_string = "(Wire, Fee %s) " +
-                                "Moved %s from Check/Savings account %d to Check/Savings Account %d";
+                                "Moved %s from Check/Savings account %d to Check/Savings Account %d on %s";
                 }
                 String transaction_msg = String.format(
                         transaction_format_string,
                         BankUtil.getMoneyString(binary_transaction.getFee()),
                         BankUtil.getMoneyString(binary_transaction.getAmount()),
                         binary_transaction.getTransactor(),
-                        binary_transaction.getOperand()
+                        binary_transaction.getOperand(),
+                        binary_transaction.getTimestamp()
                 );
                 monthly_statement.append(String.format("%s\n", transaction_msg));
             }
@@ -87,25 +88,26 @@ public class GenerateMonthlyStatementPanel extends Panel {
                 switch (unary_transaction.getUnaryTransactionType()) {
                     case DEPOSIT:
                         transaction_format_string = "(Deposit, Fee %s) " +
-                                "Added %s from Check/Savings Account %d";
+                                "Added %s from Check/Savings Account %d on %s";
                         break;
                     case WITHDRAWAL:
                         transaction_format_string = "(Withdrawal, Fee %s) " +
-                                "Subtracted %s from Check/Savings Account %d";
+                                "Subtracted %s from Check/Savings Account %d on %s";
                         break;
                     case PURCHASE:
                         transaction_format_string = "(Purchase, Fee %s) " +
-                                "Added %s to PocketAccount %d";
+                                "Added %s to PocketAccount %d on %s";
                         break;
                     case ACCRUE_INTEREST:
                         transaction_format_string = "(Accrue-Interest, Fee %s) " +
-                                "Added %s of interest to Account %d";
+                                "Added %s of interest to Account %d on %s";
                 }
                 String transaction_msg = String.format(
                         "*** " + transaction_format_string,
                         BankUtil.getMoneyString(unary_transaction.getFee()),
                         BankUtil.getMoneyString(unary_transaction.getAmount()),
-                        unary_transaction.getTransactor()
+                        unary_transaction.getTransactor(),
+                        unary_transaction.getTimestamp()
                 );
                 monthly_statement.append(String.format("%s\n", transaction_msg));
             }
@@ -116,15 +118,16 @@ public class GenerateMonthlyStatementPanel extends Panel {
                 switch (check_transaction.getCheckTransactionType()) {
                     case WRITE_CHECK:
                         transaction_format_string = "(Write-Check, Fee %s) " +
-                                "Account %d wrote check #%s worth %s";
+                                "Account %d wrote check #%s worth %s on %s";
                 }
                 String transaction_msg = String.format(
                         transaction_format_string,
                         BankUtil.getMoneyString(check_transaction.getFee()),
                         check_transaction.getTransactor(),
                         check_transaction.getCheckNo(),
-                        BankUtil.getMoneyString(check_transaction.getFee())
-                );
+                        BankUtil.getMoneyString(check_transaction.getFee()),
+                        check_transaction.getTimestamp()
+                        );
                 monthly_statement.append(String.format("%s\n", transaction_msg));
             }
         }
@@ -133,7 +136,7 @@ public class GenerateMonthlyStatementPanel extends Panel {
         }
         JScrollPane scroll_pane = new JScrollPane(monthly_statement);
         scroll_pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scroll_pane.setPreferredSize(new Dimension(500, 500));
+        scroll_pane.setPreferredSize(new Dimension(800, 500));
         JOptionPane.showMessageDialog(
                 null,
                 scroll_pane,
