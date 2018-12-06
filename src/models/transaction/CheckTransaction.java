@@ -24,6 +24,7 @@ public class CheckTransaction extends TransactionBase {
         }
     }
 
+    protected int check_no;
     protected CheckTransactionType check_type;
 
     public CheckTransaction(
@@ -46,6 +47,7 @@ public class CheckTransaction extends TransactionBase {
                 check_type.getCorrespondingTransactionType()
         );
         this.check_type = check_type;
+        this.check_no = check_no;
     }
 
     // returns: t_id
@@ -85,6 +87,9 @@ public class CheckTransaction extends TransactionBase {
         return t_id;
     }
 
+    public int getCheckNo() {
+        return check_no;
+    }
     public CheckTransactionType getCheckTransactionType() {
         return check_type;
     }
