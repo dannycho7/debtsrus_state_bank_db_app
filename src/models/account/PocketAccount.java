@@ -1,5 +1,6 @@
 package models.account;
 
+import models.transaction.*;
 import bank_util.*;
 import java.sql.*;
 import java.util.*;
@@ -33,7 +34,7 @@ public class PocketAccount extends AccountBase {
    ) throws SQLException {
       String sql = String.format("SELECT type FROM Account A " + 
                                  "JOIN Account_ownership Ao ON A.account_id = Ao.account_id " +
-                                 "WHERE A.account_id='%s' AND Ao.tax_id = '%s' AND balance > 0"
+                                 "WHERE A.account_id='%s' AND Ao.tax_id = '%s' AND A.closed = 0 AND A.balance > 0"
                   , linked_account_id
                   , customer_tax_id);
       Statement stmt = conn.createStatement();
@@ -76,6 +77,16 @@ public class PocketAccount extends AccountBase {
       );
       int n = stmt.executeUpdate(sql);
       System.out.println(n + " rows affected");
+      if (balance != 0) {
+          TransactionFactory.createTopUp(
+                  conn,
+                  balance,
+                  customer_tax_id, // initiator
+                  account_id, // transactor
+                  linked_account_id, // operand
+                  false // should_commit
+          );
+      }
       if (should_commit)
          conn.commit();
    }
