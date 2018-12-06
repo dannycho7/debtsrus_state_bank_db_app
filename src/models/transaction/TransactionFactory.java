@@ -65,6 +65,13 @@ public class TransactionFactory {
             throw new IllegalArgumentException(err_msg);
         }
         CheckSavingsAccountBase linked_account = CheckSavingsAccountBase.findOpen(conn, operand);
+        if (!linked_account.hasOwner(conn, initiator)) {
+            String err_msg = String.format("The initiator %s does not own the operand account %d"
+                    , initiator
+                    , operand
+            );
+            throw new IllegalArgumentException(err_msg);
+        }
         int fee = transactor_account.hasTransactionThisMonth(conn) ? 0 : 500;
         String timestamp = BankUtil.getSQLTimeStamp();
         transactor_account.updateBalance(
