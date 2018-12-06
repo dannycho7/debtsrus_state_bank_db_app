@@ -96,7 +96,8 @@ public class CheckingAccount extends CheckSavingsAccountBase {
            int account_id
    ) throws SQLException {
       CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.find(conn, account_id);
-      if (chk_savings_account.acct_type == CheckSavingsAccountType.STUDENT_CHECKING.getCorrespondingAccountType()) {
+      if (chk_savings_account.acct_type == CheckSavingsAccountType.STUDENT_CHECKING.getCorrespondingAccountType()
+              || chk_savings_account.acct_type == CheckSavingsAccountType.INTEREST_CHECKING.getCorrespondingAccountType()) {
          return new CheckingAccount(
                  chk_savings_account.account_id,
                  chk_savings_account.balance,
@@ -106,7 +107,7 @@ public class CheckingAccount extends CheckSavingsAccountBase {
                  chk_savings_account.customer_tax_id
          );
       } else {
-         String err_msg = String.format("Account id %d exists, but it was not an student checking account", account_id);
+         String err_msg = String.format("Account id %d exists, but it was not an student/interest checking account", account_id);
          throw new IllegalArgumentException(err_msg);
       }
    }
