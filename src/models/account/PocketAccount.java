@@ -29,14 +29,14 @@ public class PocketAccount extends AccountBase {
 
    private static boolean verifyLinkedAccountId(
       Connection conn,
-      String customer_tax_id,
+      String initiator,
       int linked_account_id
    ) throws SQLException {
       String sql = String.format("SELECT type FROM Account A " + 
                                  "JOIN Account_ownership Ao ON A.account_id = Ao.account_id " +
                                  "WHERE A.account_id='%s' AND Ao.tax_id = '%s' AND A.closed = 0 AND A.balance > 0"
                   , linked_account_id
-                  , customer_tax_id);
+                  , initiator);
       Statement stmt = conn.createStatement();
       ResultSet rs = stmt.executeQuery(sql);
       while (rs.next()) {
@@ -59,7 +59,7 @@ public class PocketAccount extends AccountBase {
       int linked_account_id,
       boolean should_commit
    ) throws SQLException {
-      if (!verifyLinkedAccountId(conn, customer_tax_id, linked_account_id)) {
+      if (!verifyLinkedAccountId(conn, initiator, linked_account_id)) {
          throw new IllegalArgumentException("Could not create pocket account");
       }
       AccountBase.create(
