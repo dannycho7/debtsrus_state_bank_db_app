@@ -23,6 +23,7 @@ public class AccountCreationPanel extends Panel {
     private JFormattedTextField balance_field;
     private JTextField branch_name_field;
     private JTextField primary_owner_field;
+    private JTextField initiator_field;
     private JTextField owners_field;
     private JComboBox<String> account_type_list;
     private JFormattedTextField optional_linked_account_field;
@@ -40,6 +41,7 @@ public class AccountCreationPanel extends Panel {
         balance_field.setColumns(10);
         branch_name_field = new JTextField(10);
         primary_owner_field = new JTextField(10);
+        initiator_field = new JTextField(10);
         owners_field = new JTextField(20);
         account_type_list = new JComboBox<String>(account_types);
         optional_linked_account_field = new JFormattedTextField(format);
@@ -56,6 +58,8 @@ public class AccountCreationPanel extends Panel {
         this.add(account_type_list);
         this.add(new JLabel("Primary Owner:"));
         this.add(primary_owner_field);
+        this.add(new JLabel("Initiator (Customer):"));
+        this.add(initiator_field);
         this.add(new JLabel("Other Owners (comma separated):"));
         this.add(owners_field);
         this.add(new JLabel("Linked Account (Only for Pocket)"));
@@ -76,8 +80,9 @@ public class AccountCreationPanel extends Panel {
         int account_id = ((Number) account_id_field.getValue()).intValue();
         int balance = ((Number) balance_field.getValue()).intValue();
         String branch_name = branch_name_field.getText();
-        String primary_owner = primary_owner_field.getText();
         AccountType acct_type = AccountType.fromString((String) account_type_list.getSelectedItem());
+        String primary_owner = primary_owner_field.getText();
+        String initiator = initiator_field.getText();
 
         switch (acct_type) {
             case STUDENT_CHECKING:
@@ -87,6 +92,7 @@ public class AccountCreationPanel extends Panel {
                         balance,
                         branch_name,
                         primary_owner,
+                        initiator,
                         false // should_commit
                 );
                 break;
@@ -97,6 +103,7 @@ public class AccountCreationPanel extends Panel {
                         balance,
                         branch_name,
                         primary_owner,
+                        initiator,
                         false // should_commit
                 );
                 break;
@@ -107,6 +114,7 @@ public class AccountCreationPanel extends Panel {
                         balance,
                         branch_name,
                         primary_owner,
+                        initiator,
                         false // should_commit
                 );
                 break;
@@ -118,6 +126,7 @@ public class AccountCreationPanel extends Panel {
                         balance,
                         branch_name,
                         primary_owner,
+                        initiator,
                         linked_account_id,
                         false // should_commit
                 );

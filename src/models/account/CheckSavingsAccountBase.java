@@ -64,6 +64,7 @@ public class CheckSavingsAccountBase extends AccountBase {
             String branch_name,
             CheckSavingsAccountType check_savings_account_type,
             String customer_tax_id,
+            String initiator,
             boolean should_commit
     ) throws SQLException {
         if (balance == 0) {
@@ -88,7 +89,7 @@ public class CheckSavingsAccountBase extends AccountBase {
         TransactionFactory.createDeposit(
                 conn,
                 balance, // amount (we deposit the starting balance)
-                customer_tax_id, // initiator is the creator of this account
+                initiator,
                 account_id, // transactor
                 false // should_commit
         );

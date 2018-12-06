@@ -54,6 +54,7 @@ public class PocketAccount extends AccountBase {
       int balance, // $$ in cents
       String branch_name,
       String customer_tax_id,
+      String initiator,
       int linked_account_id,
       boolean should_commit
    ) throws SQLException {
@@ -81,7 +82,7 @@ public class PocketAccount extends AccountBase {
           TransactionFactory.createTopUp(
                   conn,
                   balance,
-                  customer_tax_id, // initiator
+                  initiator,
                   account_id, // transactor
                   linked_account_id, // operand
                   false // should_commit

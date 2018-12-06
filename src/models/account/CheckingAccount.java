@@ -49,6 +49,7 @@ public class CheckingAccount extends CheckSavingsAccountBase {
            int balance, // $$ in cents
            String branch_name,
            String customer_tax_id,
+           String initiator,
            boolean should_commit
    ) throws SQLException {
       CheckingAccount.create(
@@ -58,6 +59,7 @@ public class CheckingAccount extends CheckSavingsAccountBase {
               branch_name,
               CheckSavingsAccountType.INTEREST_CHECKING,
               customer_tax_id,
+              initiator,
               false // should_commit
       );
    }
@@ -68,6 +70,7 @@ public class CheckingAccount extends CheckSavingsAccountBase {
            int balance, // $$ in cents
            String branch_name,
            String customer_tax_id,
+           String initiator,
            boolean should_commit
    ) throws SQLException {
       CheckingAccount.create(
@@ -77,6 +80,7 @@ public class CheckingAccount extends CheckSavingsAccountBase {
               branch_name,
               CheckSavingsAccountType.STUDENT_CHECKING,
               customer_tax_id,
+              initiator,
               false // should_commit
       );
    }
