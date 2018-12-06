@@ -12,6 +12,10 @@ abstract public class BankUtil {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
         return simpleDateFormat.format(new java.util.Date());
     }
+    public static String getMoneyString(int cents) {
+        int dollars = (int ) (cents / 100);
+        return String.format("$%01d.%02d", dollars, cents % 100);
+    }
     public static int getNumDaysInCurrentMonth() {
         Calendar calendar = Calendar.getInstance();
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
