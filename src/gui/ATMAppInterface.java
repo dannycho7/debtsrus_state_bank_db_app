@@ -13,13 +13,18 @@ import java.sql.*;
 
 public class ATMAppInterface extends JPanel{
     private Connection conn;
-    private final String logged_in_customer_id = "123456789"; // TODO: Remove later for authentication
+    private String logged_in_customer_id;
+    private JLabel logged_in_user_label;
 
     public ATMAppInterface(Connection conn) {
         super();
         this.conn = conn;
+        logged_in_customer_id = "";
+        logged_in_user_label = new JLabel("Not logged in");
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.add(new JLabel("ATM App Interface"));
+        this.add(logged_in_user_label);
+        this.add(getLogInButton());
         this.add(getDepositButton());
         this.add(getTopUpButton());
         this.add(getWithdrawalButton());
@@ -30,6 +35,21 @@ public class ATMAppInterface extends JPanel{
         this.add(getWireButton());
     }
 
+    public void changeLoggedInCustomer(String customer_id) {
+        this.logged_in_customer_id = customer_id;
+        this.logged_in_user_label.setText("Logged In Customer: " + this.logged_in_customer_id);
+    }
+
+    public JButton getLogInButton() {
+        ATMAppInterface app_interface = this;
+        JButton deposit_btn = new JButton("Login");
+        deposit_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                LoginPanel.openLoginDialog(conn, app_interface);
+            }
+        });
+        return deposit_btn;
+    }
     public JButton getDepositButton() {
         JButton deposit_btn = new JButton("Deposit");
         deposit_btn.addActionListener(new ActionListener() {
