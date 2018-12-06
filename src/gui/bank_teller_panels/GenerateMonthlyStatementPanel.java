@@ -52,15 +52,19 @@ public class GenerateMonthlyStatementPanel extends Panel {
                     case TOP_UP:
                         transaction_format_string = "(Top-Up, Fee %s) " +
                                 "Moved %s to Pocket Account %d from Check/Savings account %d";
+                        break;
                     case TRANSFER:
                         transaction_format_string = "(Transfer, Fee %s) " +
                                 "Moved %s from Check/Savings account %d to Check/Savings Account %d";
+                        break;
                     case COLLECT:
                         transaction_format_string = "(Collect, Fee %s) " +
                                 "Moved %s from Check/Savings account %d to Pocket Account %d";
+                        break;
                     case PAY_FRIEND:
                         transaction_format_string = "(Pay-Friend, Fee %s) " +
                                 "Moved %s from Pocket account %d to Pocket Account %d";
+                        break;
                     case WIRE:
                         transaction_format_string = "(Wire, Fee %s) " +
                                 "Moved %s from Check/Savings account %d to Check/Savings Account %d";
@@ -82,12 +86,15 @@ public class GenerateMonthlyStatementPanel extends Panel {
                     case DEPOSIT:
                         transaction_format_string = "(Deposit, Fee %s) " +
                                 "Added %s from Check/Savings Account %d";
+                        break;
                     case WITHDRAWAL:
                         transaction_format_string = "(Withdrawal, Fee %s) " +
                                 "Subtracted %s from Check/Savings Account %d";
+                        break;
                     case PURCHASE:
                         transaction_format_string = "(Purchase, Fee %s) " +
                                 "Added %s to PocketAccount %d";
+                        break;
                     case ACCRUE_INTEREST:
                         transaction_format_string = "(Accrue-Interest, Fee %s) " +
                                 "Added %s of interest to Account %d";
