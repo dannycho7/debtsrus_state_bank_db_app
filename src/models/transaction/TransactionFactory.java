@@ -405,8 +405,8 @@ public class TransactionFactory {
             boolean should_commit
     ) throws SQLException {
         CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.findOpen(conn, transactor);
-        double interest_rate = chk_savings_account.genInterestRate(conn) / 100;
-        int amount = (int) (chk_savings_account.genAvgDailyBalanceInMonth(conn) * interest_rate);
+        double monthly_interest_rate = ((double) (chk_savings_account.genInterestRate(conn)) / 12) / 100;
+        int amount = (int) (chk_savings_account.genAvgDailyBalanceInMonth(conn) * monthly_interest_rate);
         String timestamp = BankUtil.getSQLTimeStamp();
         chk_savings_account.updateBalance(
                 conn,
