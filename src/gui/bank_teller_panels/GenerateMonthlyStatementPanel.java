@@ -33,10 +33,12 @@ public class GenerateMonthlyStatementPanel extends Panel {
         for (AccountBase account : accounts) {
             sum_balance += account.getBalance();
             monthly_statement.append(String.format("* Account Id: %d\n", account.getAccountId()));
-            monthly_statement.append(
-                    String.format("** Initial Balance: %d\n", account.genInitialBalanceThisMonth(conn))
+            monthly_statement.append(String.format("** Initial Balance: %s\n",
+                            BankUtil.getMoneyString(account.genInitialBalanceThisMonth(conn)))
             );
-            monthly_statement.append(String.format("** Final Balance: %d\n", account.getBalance()));
+            monthly_statement.append(String.format("** Final Balance: %s\n",
+                    BankUtil.getMoneyString(account.getBalance()))
+            );
             monthly_statement.append("** Owners:\n");
             ArrayList<Customer> owners = account.genOwners(conn);
             for (Customer owner : owners) {
