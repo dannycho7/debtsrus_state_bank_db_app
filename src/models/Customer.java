@@ -168,7 +168,7 @@ public class Customer {
       return accounts;
    }
 
-   public ArrayList<Customer> genCustomersForDTER(
+   public static ArrayList<Customer> genCustomersForDTER(
            Connection conn
    ) throws SQLException {
        ArrayList<Customer> dter_customers = new ArrayList<Customer>();
@@ -179,14 +179,14 @@ public class Customer {
            for (AccountBase account : accounts) {
                ArrayList<BinaryTransaction> binary_transactions = account.genBinaryTransactionsThisMonth(conn);
                for (BinaryTransaction binary_transaction : binary_transactions) {
-                   if (binary_transaction.getInitiator() == customer.getTaxId() &&
+                   if (binary_transaction.getInitiator().equals(customer.getTaxId()) &&
                            (binary_transaction.isTransfer() || binary_transaction.isWire())) {
                        total += binary_transaction.getAmount();
                    }
                }
                ArrayList<UnaryTransaction> unary_transactions = account.genUnaryTransactionsThisMonth(conn);
                for (UnaryTransaction unary_transaction : unary_transactions) {
-                   if (unary_transaction.getInitiator() == customer.getTaxId() && unary_transaction.isDeposit()) {
+                   if (unary_transaction.getInitiator().equals(customer.getTaxId()) && unary_transaction.isDeposit()) {
                        total += unary_transaction.getAmount();
                    }
                }
