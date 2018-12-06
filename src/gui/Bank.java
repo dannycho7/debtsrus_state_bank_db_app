@@ -15,6 +15,9 @@ public class Bank extends JFrame {
 	final static String BANK_TELLER_PANEL = "Bank Teller Interface";
 	public Bank() {
 		Connection conn = JDBCConnectionManager.getConnection();
+		if (conn == null) {
+			throw new RuntimeException("Could not connect to database");
+		}
 		this.conn = conn;
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {

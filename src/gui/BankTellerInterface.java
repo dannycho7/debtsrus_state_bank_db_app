@@ -26,6 +26,7 @@ public class BankTellerInterface extends JPanel{
         this.add(getDeleteTransactionsButton());
         this.add(getDeleteClosedAccountsButton());
         this.add(getListClosedAccountsButton());
+        this.add(getGenerateMonthlyStatementsButton());
     }
 
     public JButton getAddAccountButton() {
@@ -144,5 +145,15 @@ public class BankTellerInterface extends JPanel{
             }
         });
         return list_closed_accounts_btn;
+    }
+
+    public JButton getGenerateMonthlyStatementsButton() {
+        JButton generate_monthly_statement_btn = new JButton("Generate Monthly Statement");
+        generate_monthly_statement_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                GenerateMonthlyStatementPanel.openGenerateMonthlyStatementDialog(conn);
+            }
+        });
+        return generate_monthly_statement_btn;
     }
 }
