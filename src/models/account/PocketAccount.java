@@ -63,7 +63,7 @@ public class PocketAccount extends AccountBase {
       AccountBase.create(
          conn,
          account_id,
-         balance,
+         0, // balance: pocket account starts at $0 and we deposit via Top-Up
          branch_name,
          AccountType.POCKET,
          customer_tax_id,
