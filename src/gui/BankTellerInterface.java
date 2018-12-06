@@ -27,6 +27,7 @@ public class BankTellerInterface extends JPanel{
         this.add(getDeleteClosedAccountsButton());
         this.add(getListClosedAccountsButton());
         this.add(getGenerateMonthlyStatementsButton());
+        this.add(getCustomerReportButton());
     }
 
     public JButton getAddAccountButton() {
@@ -38,7 +39,6 @@ public class BankTellerInterface extends JPanel{
         });
         return add_account_btn;
     }
-
     public JButton getWriteCheckButton() {
         JButton write_check_btn = new JButton("Write-Check");
         write_check_btn.addActionListener(new ActionListener() {
@@ -48,7 +48,6 @@ public class BankTellerInterface extends JPanel{
         });
         return write_check_btn;
     }
-
     public JButton getAddInterestButton() {
         JButton add_interest_btn = new JButton("Add-Interest");
         add_interest_btn.addActionListener(new ActionListener() {
@@ -73,7 +72,6 @@ public class BankTellerInterface extends JPanel{
         });
         return add_interest_btn;
     }
-
     public JButton getDeleteTransactionsButton() {
         JButton delete_transactions_btn = new JButton("Delete Transactions");
         delete_transactions_btn.addActionListener(new ActionListener() {
@@ -97,7 +95,6 @@ public class BankTellerInterface extends JPanel{
         });
         return delete_transactions_btn;
     }
-
     public JButton getDeleteClosedAccountsButton() {
         JButton delete_closed_accounts_and_customers_btn = new JButton("Delete Closed Accounts");
         delete_closed_accounts_and_customers_btn.addActionListener(new ActionListener() {
@@ -121,7 +118,6 @@ public class BankTellerInterface extends JPanel{
         });
         return delete_closed_accounts_and_customers_btn;
     }
-
     public JButton getListClosedAccountsButton() {
         JButton list_closed_accounts_btn = new JButton("List Closed Accounts");
         list_closed_accounts_btn.addActionListener(new ActionListener() {
@@ -146,7 +142,6 @@ public class BankTellerInterface extends JPanel{
         });
         return list_closed_accounts_btn;
     }
-
     public JButton getGenerateMonthlyStatementsButton() {
         JButton generate_monthly_statement_btn = new JButton("Generate Monthly Statement");
         generate_monthly_statement_btn.addActionListener(new ActionListener() {
@@ -155,5 +150,14 @@ public class BankTellerInterface extends JPanel{
             }
         });
         return generate_monthly_statement_btn;
+    }
+    public JButton getCustomerReportButton() {
+        JButton customer_report_btn = new JButton("Customer Report");
+        customer_report_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                CustomerReportPanel.openCustomerReportDialog(conn);
+            }
+        });
+        return customer_report_btn;
     }
 }
