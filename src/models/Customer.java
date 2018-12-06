@@ -78,10 +78,10 @@ public class Customer {
            Connection conn,
            boolean should_commit
    ) throws SQLException {
-      String no_accounts_sql = "SELECT Ao.tax_id FROM Account_ownership Ao GROUP BY Ao.tax_id HAVING COUNT(*) = 0";
+      String has_accounts_sql = "SELECT Ao.tax_id FROM Account_ownership Ao GROUP BY Ao.tax_id HAVING COUNT(*) > 0";
       String delete_customers_sql = String.format("DELETE FROM Customer C " +
-                      "WHERE C.tax_id IN (%s)"
-              , no_accounts_sql
+                      "WHERE C.tax_id NOT IN (%s)"
+              , has_accounts_sql
       );
       Statement stmt = conn.createStatement();
       int n = stmt.executeUpdate(delete_customers_sql);
