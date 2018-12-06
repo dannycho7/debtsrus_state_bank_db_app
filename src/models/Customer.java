@@ -93,7 +93,7 @@ public class Customer {
    public static Customer find(
            Connection conn,
            String customer_tax_id
-   ) throws SQLException, IllegalArgumentException {
+   ) throws SQLException {
       String get_customer_sql = String.format("SELECT %s FROM Customer C WHERE C.tax_id = %s "
               , "C.tax_id, C.name, C.address, C.pin_digest"
               , customer_tax_id

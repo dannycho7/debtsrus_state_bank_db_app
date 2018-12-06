@@ -13,7 +13,7 @@ public class TransactionFactory {
         String initiator, // customer tax_id
         int transactor, // account_id
         boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.find(conn, transactor);
         if (!chk_savings_account.hasOwner(conn, initiator)) {
             String err_msg = String.format("Initiator %s does not own account %d", initiator, transactor);
@@ -48,7 +48,7 @@ public class TransactionFactory {
             int transactor, // pocket account_id
             int operand, // account_id
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         PocketAccount transactor_account = PocketAccount.findOpen(conn, transactor);
         if (!transactor_account.hasOwner(conn, initiator)) {
             String err_msg = String.format("The initiator %s does not own the transactor account %d"
@@ -101,7 +101,7 @@ public class TransactionFactory {
             String initiator, // customer tax_id
             int transactor, // account_id
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.findOpen(conn, transactor);
         String timestamp = BankUtil.getSQLTimeStamp();
         chk_savings_account.updateBalance(
@@ -131,7 +131,7 @@ public class TransactionFactory {
             String initiator, // customer tax_id
             int transactor, // account_id
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         PocketAccount pocket_account = PocketAccount.findOpen(conn, transactor);
         int fee = pocket_account.hasTransactionThisMonth(conn) ? 0 : 500;
         String timestamp = BankUtil.getSQLTimeStamp();
@@ -163,7 +163,7 @@ public class TransactionFactory {
             int transactor, // from account_id
             int operand, // to account_id
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         if (amount > 2000 * 100) {
             throw new IllegalArgumentException("Amount transferred cannot exceed $2000");
         }
@@ -219,7 +219,7 @@ public class TransactionFactory {
             int transactor, // pocket account_id
             int operand, // account_id
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         PocketAccount transactor_account = PocketAccount.findOpen(conn, transactor);
         if (!transactor_account.hasOwner(conn, initiator)) {
             String err_msg = String.format("The initiator %s does not own the transactor account %d"
@@ -274,7 +274,7 @@ public class TransactionFactory {
             int transactor, // pocket account_id
             int operand, // other pocket account_id
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         PocketAccount transactor_account = PocketAccount.findOpen(conn, transactor);
         if (!transactor_account.hasOwner(conn, initiator)) {
             String err_msg = String.format("The initiator %s does not own the transactor account %d"
@@ -322,7 +322,7 @@ public class TransactionFactory {
             int transactor, // check/savings account_id
             int operand, // other check/savings account_id
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         CheckSavingsAccountBase transactor_account = CheckSavingsAccountBase.findOpen(conn, transactor);
         if (!transactor_account.hasOwner(conn, initiator)) {
             String err_msg = String.format("The initiator %s does not own the transactor account %d"
@@ -369,7 +369,7 @@ public class TransactionFactory {
             String initiator, // customer tax_id
             int transactor, // check account_id
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         CheckingAccount chk_savings_account = CheckingAccount.findOpen(conn, transactor);
         String timestamp = BankUtil.getSQLTimeStamp();
         chk_savings_account.updateBalance(
@@ -396,7 +396,7 @@ public class TransactionFactory {
             Connection conn,
             int transactor, // check/savings account_id
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.findOpen(conn, transactor);
         double interest_rate = chk_savings_account.genInterestRate(conn) / 100;
         int amount = (int) (chk_savings_account.genAvgDailyBalanceInMonth(conn) * interest_rate);

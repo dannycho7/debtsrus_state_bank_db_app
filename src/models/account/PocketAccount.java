@@ -56,7 +56,7 @@ public class PocketAccount extends AccountBase {
       String customer_tax_id,
       int linked_account_id,
       boolean should_commit
-   ) throws SQLException, IllegalArgumentException {
+   ) throws SQLException {
       if (!verifyLinkedAccountId(conn, customer_tax_id, linked_account_id)) {
          throw new IllegalArgumentException("Could not create pocket account");
       }
@@ -94,7 +94,7 @@ public class PocketAccount extends AccountBase {
    public static PocketAccount find(
            Connection conn,
            int account_id
-   ) throws SQLException, IllegalArgumentException {
+   ) throws SQLException {
        String get_pocket_account_sql = String.format("SELECT %s FROM Account A " +
                        "JOIN Pocket_account Pa ON A.account_id = Pa.account_id " +
                        "WHERE Pa.account_id = %s "
@@ -130,7 +130,7 @@ public class PocketAccount extends AccountBase {
    public static PocketAccount findOpen(
            Connection conn,
            int account_id
-   ) throws SQLException, IllegalArgumentException {
+   ) throws SQLException {
        PocketAccount account = PocketAccount.find(conn, account_id);
        if (account.isClosed()) {
            String err_msg = String.format("Found the account %d, but it was closed", account.account_id);
@@ -167,7 +167,7 @@ public class PocketAccount extends AccountBase {
             Connection conn,
             int balance,
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         super.updateBalance(
                 conn,
                 balance,

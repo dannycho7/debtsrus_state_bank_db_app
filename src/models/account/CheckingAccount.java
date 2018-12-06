@@ -84,7 +84,7 @@ public class CheckingAccount extends CheckSavingsAccountBase {
    public static CheckingAccount find(
            Connection conn,
            int account_id
-   ) throws SQLException, IllegalArgumentException {
+   ) throws SQLException {
       CheckSavingsAccountBase chk_savings_account = CheckSavingsAccountBase.find(conn, account_id);
       if (chk_savings_account.acct_type == CheckSavingsAccountType.STUDENT_CHECKING.getCorrespondingAccountType()) {
          return new CheckingAccount(
@@ -104,7 +104,7 @@ public class CheckingAccount extends CheckSavingsAccountBase {
    public static CheckingAccount findOpen(
            Connection conn,
            int account_id
-   ) throws SQLException, IllegalArgumentException {
+   ) throws SQLException {
       CheckingAccount account = CheckingAccount.find(conn, account_id);
       if (account.isClosed()) {
          String err_msg = String.format("Found the account %d, but it was closed", account.account_id);

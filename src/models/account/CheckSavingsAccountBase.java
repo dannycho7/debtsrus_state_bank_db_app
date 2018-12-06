@@ -41,7 +41,7 @@ public class CheckSavingsAccountBase extends AccountBase {
     public static void addInterestToAllOpen(
             Connection conn,
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         if (AccountBase.hasInterestBeenAddedThisMonth(conn)) {
             throw new IllegalArgumentException("Interest has already been added for this month");
         }
@@ -65,7 +65,7 @@ public class CheckSavingsAccountBase extends AccountBase {
             CheckSavingsAccountType check_savings_account_type,
             String customer_tax_id,
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         if (balance == 0) {
             throw new IllegalArgumentException("Balance for a check/savings account cannot start at 0");
         }
@@ -99,7 +99,7 @@ public class CheckSavingsAccountBase extends AccountBase {
     public static CheckSavingsAccountBase find(
             Connection conn,
             int account_id
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         String get_check_savings_account_sql = String.format("SELECT %s FROM Account A " +
                         "JOIN Check_savings_account Csa ON A.account_id = Csa.account_id " +
                         "WHERE Csa.account_id = %s "
@@ -133,7 +133,7 @@ public class CheckSavingsAccountBase extends AccountBase {
     public static CheckSavingsAccountBase findOpen(
             Connection conn,
             int account_id
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         CheckSavingsAccountBase account = CheckSavingsAccountBase.find(conn, account_id);
         if (account.isClosed()) {
             String err_msg = String.format("Found the account %d, but it was closed", account.account_id);
@@ -145,7 +145,7 @@ public class CheckSavingsAccountBase extends AccountBase {
     // NOTE: Does not work if a transaction was executed AFTER this month
     public int genAvgDailyBalanceInMonth(
             Connection conn
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         int num_days_in_month = BankUtil.getNumDaysInCurrentMonth();
         int[] delta_per_day = this.genDeltasFromTransactionsThisMonth(conn);
         int[] balance_per_day = new int[num_days_in_month];
@@ -179,7 +179,7 @@ public class CheckSavingsAccountBase extends AccountBase {
 
     public double genInterestRate(
             Connection conn
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         String get_account_type_sql = String.format("SELECT %s FROM Account_type At " +
                         "WHERE At.name = '%s'"
                 , "At.interest_rate"
@@ -198,7 +198,7 @@ public class CheckSavingsAccountBase extends AccountBase {
             Connection conn,
             int balance,
             boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         super.updateBalance(
                 conn,
                 balance,

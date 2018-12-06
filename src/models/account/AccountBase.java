@@ -65,7 +65,7 @@ public class AccountBase {
    protected void modifyAccountToClose(
            Connection conn,
            boolean should_commit
-   ) throws SQLException, IllegalArgumentException {
+   ) throws SQLException {
        if (this.isClosed()) {
            throw new IllegalArgumentException("Cannot close an account that is already closed");
        }
@@ -175,7 +175,7 @@ public class AccountBase {
             String type,
             int amount,
             int fee
-    ) throws IllegalArgumentException {
+    ) {
         boolean is_transactor = (this.account_id == transactor);
         boolean is_operand = (this.account_id == operand);
         if (!is_transactor && !is_operand) {
@@ -211,7 +211,7 @@ public class AccountBase {
 
    protected int[] genDeltasFromTransactionsThisMonth(
            Connection conn
-   ) throws SQLException, IllegalArgumentException {
+   ) throws SQLException {
        String get_transactions_this_month_sql = String.format("SELECT %s " +
                        "FROM Transaction T " +
                        "LEFT JOIN Binary_transaction Bt ON T.t_id = Bt.t_id " +
@@ -252,7 +252,7 @@ public class AccountBase {
     // NOTE: Does not work if a transaction was executed AFTER this month
     public int genInitialBalanceThisMonth(
             Connection conn
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
        int num_days_in_month = BankUtil.getNumDaysInCurrentMonth();
        int[] delta_per_day = this.genDeltasFromTransactionsThisMonth(conn);
        int balance = this.getBalance();
@@ -293,7 +293,7 @@ public class AccountBase {
 
     public ArrayList<AccrueInterestTransaction> genAccrueInterestTransactionsThisMonth(
             Connection conn
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         String get_binary_transactions_this_month_sql = String.format("SELECT %s " +
                         "FROM Transaction T " +
                         "JOIN Accrue_interest_transaction Ait ON T.t_id = Ait.t_id " +
@@ -326,7 +326,7 @@ public class AccountBase {
 
     public ArrayList<BinaryTransaction> genBinaryTransactionsThisMonth(
             Connection conn
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         String get_binary_transactions_this_month_sql = String.format("SELECT %s " +
                         "FROM Transaction T " +
                         "JOIN Binary_transaction Bt ON T.t_id = Bt.t_id " +
@@ -365,7 +365,7 @@ public class AccountBase {
 
     public ArrayList<CheckTransaction> genCheckTransactionsThisMonth(
             Connection conn
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         String get_check_transactions_this_month_sql = String.format("SELECT %s " +
                         "FROM Transaction T " +
                         "JOIN Check_transaction Ct ON T.t_id = Ct.t_id " +
@@ -402,7 +402,7 @@ public class AccountBase {
 
     public ArrayList<UnaryTransaction> genUnaryTransactionsThisMonth(
             Connection conn
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         String get_unary_transactions_this_month_sql = String.format("SELECT %s " +
                         "FROM Transaction T " +
                         "JOIN Unary_transaction Ut ON T.t_id = Ut.t_id " +
@@ -479,7 +479,7 @@ public class AccountBase {
            Connection conn,
            int balance,
            boolean should_commit
-    ) throws SQLException, IllegalArgumentException {
+    ) throws SQLException {
         if (this.isClosed()) {
             throw new IllegalArgumentException("You cannot update balance of a closed account");
         }
