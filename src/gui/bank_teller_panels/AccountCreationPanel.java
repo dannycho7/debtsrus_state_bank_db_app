@@ -24,7 +24,7 @@ public class AccountCreationPanel extends Panel {
     private JTextField branch_name_field;
     private JTextField primary_owner_field;
     private JTextField owners_field;
-    private JComboBox account_type_list;
+    private JComboBox<String> account_type_list;
     private JFormattedTextField optional_linked_account_field;
 
     public AccountCreationPanel(Connection conn) {
@@ -41,7 +41,7 @@ public class AccountCreationPanel extends Panel {
         branch_name_field = new JTextField(10);
         primary_owner_field = new JTextField(10);
         owners_field = new JTextField(20);
-        account_type_list = new JComboBox(account_types);
+        account_type_list = new JComboBox<String>(account_types);
         optional_linked_account_field = new JFormattedTextField(format);
         balance_field.setColumns(10);
 
