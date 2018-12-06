@@ -1,6 +1,7 @@
 import bank_util.*;
 import models.*;
 import models.account.*;
+import models.transaction.*;
 
 import java.sql.*;
 import java.util.Calendar;
@@ -53,6 +54,7 @@ public class InitDB {
                     CINDY_LAUGHER_ID,
                     IVAN_LENDME_ID
             }, IVAN_LENDME_ID, false);
+            TransactionFactory.createDeposit(conn, 880000, JOE_PEPSI_ID, 17431, false);
 
             BankUtil.setCurrentDate(2011, Calendar.MARCH, 3);
             CheckingAccount.createForStudent(conn, 54321, 2100000, "Los Angeles", HURRYSON_FORD_ID, new String[]{
@@ -61,6 +63,7 @@ public class InitDB {
                     NAM_HOI_CHUNG_ID
             }, HURRYSON_FORD_ID, false);
             CheckingAccount.createForStudent(conn, 12121, 120000, "Goleta", DAVID_COPPERFILL_ID, new String[] {}, DAVID_COPPERFILL_ID, false);
+            TransactionFactory.createWithdrawal(conn, 300000, ELIZABETH_SAILOR_ID, 54321, false);
 
             CheckingAccount.createForInterest(conn, 41725, 1500000, "Los Angeles", GEORGE_BRUSH_ID, new String[] {
                     FATAL_CASTRO_ID,
@@ -108,18 +111,47 @@ public class InitDB {
             PocketAccount.create(conn, 43947, 3000, "Isla Vista", LI_KUNG_ID, new String[] {
                     OLIVE_STONER_ID
             }, LI_KUNG_ID, 29107, false);
+            TransactionFactory.createWithdrawal(conn, 200000, LI_KUNG_ID, 76543, false);
+            TransactionFactory.createPurchase(conn, 500, DAVID_COPPERFILL_ID, 53027, false);
 
             BankUtil.setCurrentDate(2011, Calendar.MARCH, 6);
             PocketAccount.create(conn, 67521, 10000, "Santa Barbara", KELVIN_COSTNER_ID, new String[] {
                     FATAL_CASTRO_ID,
                     HURRYSON_FORD_ID
             }, FATAL_CASTRO_ID, 19023, false);
+            TransactionFactory.createWithdrawal(conn, 100000000, MAGIC_JORDAN_ID, 93156, false);
+            TransactionFactory.createWriteCheck(conn, 95000000, KELVIN_COSTNER_ID, 93156, false);
+            TransactionFactory.createWithdrawal(conn, 400000, LI_KUNG_ID, 29107, false);
+            TransactionFactory.createCollect(conn, 1000, OLIVE_STONER_ID, 43947, 29107, false);
+            TransactionFactory.createTopUp(conn, 3000, LI_KUNG_ID, 43947, 29107, false);
+
+            BankUtil.setCurrentDate(2011, Calendar.MARCH, 7);
+            TransactionFactory.createTransfer(conn, 28900, IVAN_LENDME_ID, 43942, 17431, false);
+            TransactionFactory.createWithdrawal(conn, 28900, PIT_WILSON_ID, 43942, false);
+
+            BankUtil.setCurrentDate(2011, Calendar.MARCH, 8);
+            TransactionFactory.createPayFriend(conn, 1000, PIT_WILSON_ID, 60413, 67521, false);
+            TransactionFactory.createDeposit(conn, 5000000, OLIVE_STONER_ID, 93156, false);
+            TransactionFactory.createWriteCheck(conn, 20000, DAVID_COPPERFILL_ID, 12121, false);
+            TransactionFactory.createTransfer(conn, 100000, GEORGE_BRUSH_ID, 41725, 19023, false);
+
+            BankUtil.setCurrentDate(2011, Calendar.MARCH, 9);
+            TransactionFactory.createWire(conn, 400000, FATAL_CASTRO_ID, 41725, 32156, false);
+            TransactionFactory.createPayFriend(conn, 1000, DAVID_COPPERFILL_ID, 53027, 60413, false);
+
+            BankUtil.setCurrentDate(2011, Calendar.MARCH, 10);
+            TransactionFactory.createPurchase(conn, 1500, ELIZABETH_SAILOR_ID, 60413, false);
+
+            BankUtil.setCurrentDate(2011, Calendar.MARCH, 12);
+            TransactionFactory.createWithdrawal(conn, 2000000, NAM_HOI_CHUNG_ID, 93156, false);
+            TransactionFactory.createWriteCheck(conn, 45600, MAGIC_JORDAN_ID, 76543, false);
+            TransactionFactory.createTopUp(conn, 5000, FATAL_CASTRO_ID, 67521, 19023, false);
+
+            BankUtil.setCurrentDate(2011, Calendar.MARCH, 14);
+            TransactionFactory.createPayFriend(conn, 2000, HURRYSON_FORD_ID, 67521, 53027, false);
+            TransactionFactory.createCollect(conn, 1500, OLIVE_STONER_ID, 43947, 29107, false);
 
             conn.commit();
-            /*
-            System.out.println("Rolling back..");
-            JDBCConnectionManager.rollbackConn(conn);
-            */
         } catch (Exception se) {
             se.printStackTrace();
             System.out.println("Rolling back...");
