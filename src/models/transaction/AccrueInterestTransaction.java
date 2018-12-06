@@ -1,20 +1,14 @@
 package models.transaction;
 
-import bank_util.*;
 import java.sql.*;
 
-public class CheckTransaction extends TransactionBase {
-    protected int check_no;
-    protected String initiator;
-
-    public CheckTransaction(
+public class AccrueInterestTransaction extends TransactionBase {
+    public AccrueInterestTransaction(
             int t_id,
             int amount,
             String timestamp,
             int fee,
-            String initiator, // customer tax_id
-            int transactor, // account_id
-            int check_no
+            int transactor // account_id
     ) {
         super(
                 t_id,
@@ -22,10 +16,8 @@ public class CheckTransaction extends TransactionBase {
                 timestamp,
                 fee,
                 transactor,
-                TransactionType.WRITE_CHECK
+                TransactionType.ACCRUE_INTEREST
         );
-        this.check_no = check_no;
-        this.initiator = initiator;
     }
 
     // returns: t_id
@@ -34,27 +26,23 @@ public class CheckTransaction extends TransactionBase {
             int amount,
             String timestamp,
             int fee,
-            String initiator,
-            int transactor,
+            int transactor, // account_id
             boolean should_commit
     ) throws SQLException {
-        int check_no = BankUtil.getUUID();
         int t_id = TransactionBase.create(
                 conn,
                 amount,
                 timestamp,
                 fee,
                 transactor,
-                TransactionType.WRITE_CHECK,
+                TransactionType.ACCRUE_INTEREST,
                 false // should_commit
         ); // creates transaction base
 
         Statement stmt = conn.createStatement();
-        String sql = String.format("INSERT INTO Check_transaction %s VALUES (%d, '%s', %d)"
-                , "(t_id, initiator, check_no)"
+        String sql = String.format("INSERT INTO Accrue_interest_transaction %s VALUES (%d)"
+                , "(t_id)"
                 , t_id
-                , initiator
-                , check_no
         );
         int n = stmt.executeUpdate(sql);
         System.out.println(n + " rows affected");
@@ -62,12 +50,5 @@ public class CheckTransaction extends TransactionBase {
             conn.commit();
 
         return t_id;
-    }
-
-    public int getCheckNo() {
-        return check_no;
-    }
-    public String getInitiator() {
-        return initiator;
     }
 }

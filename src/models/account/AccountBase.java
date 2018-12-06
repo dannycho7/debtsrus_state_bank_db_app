@@ -7,7 +7,6 @@ import models.Customer;
 import models.transaction.*;
 import models.transaction.TransactionBase.TransactionType;
 import models.transaction.BinaryTransaction.BinaryTransactionType;
-import models.transaction.CheckTransaction.CheckTransactionType;
 import models.transaction.UnaryTransaction.UnaryTransactionType;
 
 public class AccountBase {
@@ -217,7 +216,7 @@ public class AccountBase {
                        "FROM Transaction T " +
                        "LEFT JOIN Binary_transaction Bt ON T.t_id = Bt.t_id " +
                        "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND (T.transactor = %d OR Bt.operand = %d)"
-               , "T.t_id, T.amount, TO_CHAR(T.timestamp, 'DD') AS timestamp_day, T.fee, T.initiator, T.transactor, T.type, Bt.operand"
+               , "T.t_id, T.amount, TO_CHAR(T.timestamp, 'DD') AS timestamp_day, T.fee, Bt.initiator, T.transactor, T.type, Bt.operand"
                , BankUtil.getCurrentMonthYear()
                , this.account_id
                , this.account_id
@@ -292,6 +291,39 @@ public class AccountBase {
         return customers;
     }
 
+    public ArrayList<AccrueInterestTransaction> genAccrueInterestTransactionsThisMonth(
+            Connection conn
+    ) throws SQLException, IllegalArgumentException {
+        String get_binary_transactions_this_month_sql = String.format("SELECT %s " +
+                        "FROM Transaction T " +
+                        "JOIN Accrue_interest_transaction Ait ON T.t_id = Ait.t_id " +
+                        "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND T.transactor = %d"
+                , "T.t_id, T.amount, T.timestamp, T.fee, T.transactor, T.type"
+                , BankUtil.getCurrentMonthYear()
+                , this.account_id
+                , this.account_id
+        );
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(get_binary_transactions_this_month_sql);
+        ArrayList<AccrueInterestTransaction> accrue_interest_transactions = new ArrayList<AccrueInterestTransaction>();
+        while (rs.next()) {
+            int t_id = rs.getInt("t_id");
+            int amount = rs.getInt("amount");
+            String timestamp = rs.getString("timestamp");
+            int fee = rs.getInt("fee");
+            int transactor = rs.getInt("transactor");
+            AccrueInterestTransaction accrue_interest_transaction = new AccrueInterestTransaction(
+                    t_id,
+                    amount,
+                    timestamp,
+                    fee,
+                    transactor // account_id
+            );
+            accrue_interest_transactions.add(accrue_interest_transaction);
+        }
+        return accrue_interest_transactions;
+    }
+
     public ArrayList<BinaryTransaction> genBinaryTransactionsThisMonth(
             Connection conn
     ) throws SQLException, IllegalArgumentException {
@@ -299,7 +331,7 @@ public class AccountBase {
                         "FROM Transaction T " +
                         "JOIN Binary_transaction Bt ON T.t_id = Bt.t_id " +
                         "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND (T.transactor = %d OR Bt.operand = %d)"
-                , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type, Bt.operand"
+                , "T.t_id, T.amount, T.timestamp, T.fee, Bt.initiator, T.transactor, T.type, Bt.operand"
                 , BankUtil.getCurrentMonthYear()
                 , this.account_id
                 , this.account_id
@@ -338,7 +370,7 @@ public class AccountBase {
                         "FROM Transaction T " +
                         "JOIN Check_transaction Ct ON T.t_id = Ct.t_id " +
                         "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND T.transactor = %d "
-                , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type, Ct.check_no"
+                , "T.t_id, T.amount, T.timestamp, T.fee, Ct.initiator, T.transactor, T.type, Ct.check_no"
                 , BankUtil.getCurrentMonthYear()
                 , this.account_id
                 , this.account_id
@@ -353,7 +385,6 @@ public class AccountBase {
             int fee = rs.getInt("fee");
             String initiator = rs.getString("initiator");
             int transactor = rs.getInt("transactor");
-            CheckTransactionType check_type = CheckTransactionType.fromString(rs.getString("type"));
             int check_no = rs.getInt("check_no");
             CheckTransaction check_transaction = new CheckTransaction(
                     t_id,
@@ -362,8 +393,7 @@ public class AccountBase {
                     fee,
                     initiator, // customer tax_id
                     transactor, // account_id
-                    check_no,
-                    check_type
+                    check_no
             );
             check_transactions.add(check_transaction);
         }
@@ -377,7 +407,7 @@ public class AccountBase {
                         "FROM Transaction T " +
                         "JOIN Unary_transaction Ut ON T.t_id = Ut.t_id " +
                         "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND T.transactor = %d "
-                , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type"
+                , "T.t_id, T.amount, T.timestamp, T.fee, Ut.initiator, T.transactor, T.type"
                 , BankUtil.getCurrentMonthYear()
                 , this.account_id
                 , this.account_id

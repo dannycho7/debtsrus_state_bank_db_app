@@ -56,7 +56,6 @@ public class BankTellerInterface extends JPanel{
                 try {
                     CheckSavingsAccountBase.addInterestToAllOpen(
                             conn,
-                            "000000000", // admin customer
                             false // should_commit
                     );
                     conn.commit();

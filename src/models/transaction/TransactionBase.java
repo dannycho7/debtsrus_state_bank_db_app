@@ -58,7 +58,6 @@ abstract public class TransactionBase {
     protected int amount;
     protected String timestamp;
     protected int fee;
-    protected String initiator;
     protected int transactor;
     protected TransactionType type;
 
@@ -67,7 +66,6 @@ abstract public class TransactionBase {
             int amount,
             String timestamp,
             int fee,
-            String initiator, // customer tax_id
             int transactor, // account_id
             TransactionType type
     ) {
@@ -75,7 +73,6 @@ abstract public class TransactionBase {
         this.amount = amount;
         this.timestamp = timestamp;
         this.fee = fee;
-        this.initiator = initiator;
         this.transactor = transactor;
         this.type = type;
     }
@@ -86,20 +83,18 @@ abstract public class TransactionBase {
             int amount,
             String timestamp,
             int fee,
-            String initiator, // customer tax_id
             int transactor, // account_id
             TransactionType type,
             boolean should_commit
     ) throws SQLException {
         int t_id = BankUtil.getUUID();
         Statement stmt = conn.createStatement();
-        String sql = String.format("INSERT INTO Transaction %s VALUES (%d, %d, %s, %d, '%s', %d, '%s')"
-                , "(t_id, amount, timestamp, fee, initiator, transactor, type)"
+        String sql = String.format("INSERT INTO Transaction %s VALUES (%d, %d, %s, %d, %d, '%s')"
+                , "(t_id, amount, timestamp, fee, transactor, type)"
                 , t_id
                 , amount
                 , String.format("TO_DATE('%s', 'YYYY-MM-DD')", timestamp) // should not have single quotes
                 , fee
-                , initiator
                 , transactor
                 , type.getName()
         );
@@ -137,9 +132,6 @@ abstract public class TransactionBase {
     }
     public int getFee() {
         return fee;
-    }
-    public String getInitiator() {
-        return initiator;
     }
     public int getTransactor() {
         return transactor;

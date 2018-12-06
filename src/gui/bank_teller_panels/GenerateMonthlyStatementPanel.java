@@ -98,9 +98,6 @@ public class GenerateMonthlyStatementPanel extends Panel {
                         transaction_format_string = "(Purchase, Fee %s) " +
                                 "Added %s to PocketAccount %d on %s";
                         break;
-                    case ACCRUE_INTEREST:
-                        transaction_format_string = "(Accrue-Interest, Fee %s) " +
-                                "Added %s of interest to Account %d on %s";
                 }
                 String transaction_msg = String.format(
                         "*** " + transaction_format_string,
@@ -115,19 +112,29 @@ public class GenerateMonthlyStatementPanel extends Panel {
             for (CheckTransaction check_transaction : check_transactions) {
                 String msg = "";
                 String transaction_format_string = "";
-                switch (check_transaction.getCheckTransactionType()) {
-                    case WRITE_CHECK:
-                        transaction_format_string = "(Write-Check, Fee %s) " +
-                                "Account %d wrote check #%s worth %s on %s";
-                }
+                transaction_format_string = "(Write-Check, Fee %s) Account %d wrote check #%s worth %s on %s";
                 String transaction_msg = String.format(
                         transaction_format_string,
                         BankUtil.getMoneyString(check_transaction.getFee()),
                         check_transaction.getTransactor(),
                         check_transaction.getCheckNo(),
-                        BankUtil.getMoneyString(check_transaction.getFee()),
+                        BankUtil.getMoneyString(check_transaction.getAmount()),
                         check_transaction.getTimestamp()
                         );
+                monthly_statement.append(String.format("%s\n", transaction_msg));
+            }
+            ArrayList<AccrueInterestTransaction> accrue_interest_transactions = account.genAccrueInterestTransactionsThisMonth(conn);
+            for (AccrueInterestTransaction accrue_interest_transaction : accrue_interest_transactions) {
+                String msg = "";
+                String transaction_format_string = "";
+                transaction_format_string = "(Accrue-Interest, Fee %s) Account %d received %s in interest on %s";
+                String transaction_msg = String.format(
+                        transaction_format_string,
+                        BankUtil.getMoneyString(accrue_interest_transaction.getFee()),
+                        accrue_interest_transaction.getTransactor(),
+                        BankUtil.getMoneyString(accrue_interest_transaction.getAmount()),
+                        accrue_interest_transaction.getTimestamp()
+                );
                 monthly_statement.append(String.format("%s\n", transaction_msg));
             }
         }

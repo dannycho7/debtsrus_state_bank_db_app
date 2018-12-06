@@ -6,8 +6,7 @@ public class UnaryTransaction extends TransactionBase {
     public enum UnaryTransactionType {
         DEPOSIT(TransactionType.DEPOSIT),
         WITHDRAWAL(TransactionType.WITHDRAWAL),
-        PURCHASE(TransactionType.PURCHASE),
-        ACCRUE_INTEREST(TransactionType.ACCRUE_INTEREST);
+        PURCHASE(TransactionType.PURCHASE);
 
         private final TransactionType transaction_type;
         UnaryTransactionType(TransactionType t) {
@@ -24,14 +23,13 @@ public class UnaryTransaction extends TransactionBase {
                     return UnaryTransactionType.WITHDRAWAL;
                 case "Purchase":
                     return UnaryTransactionType.PURCHASE;
-                case "Accrue-Interest":
-                    return UnaryTransactionType.ACCRUE_INTEREST;
                 default:
                     return null;
             }
         }
     }
 
+    protected String initiator;
     protected UnaryTransactionType unary_type;
 
     public UnaryTransaction(
@@ -48,10 +46,10 @@ public class UnaryTransaction extends TransactionBase {
                 amount,
                 timestamp,
                 fee,
-                initiator,
                 transactor,
                 unary_type.getCorrespondingTransactionType()
         );
+        this.initiator = initiator;
         this.unary_type = unary_type;
     }
 
@@ -71,16 +69,16 @@ public class UnaryTransaction extends TransactionBase {
                 amount,
                 timestamp,
                 fee,
-                initiator,
                 transactor,
                 type.getCorrespondingTransactionType(),
                 false // should_commit
         ); // creates transaction base
 
         Statement stmt = conn.createStatement();
-        String sql = String.format("INSERT INTO Unary_transaction %s VALUES (%d)"
-                , "(t_id)"
+        String sql = String.format("INSERT INTO Unary_transaction %s VALUES (%d, '%s')"
+                , "(t_id, initiator)"
                 , t_id
+                , initiator
         );
         int n = stmt.executeUpdate(sql);
         System.out.println(n + " rows affected");
@@ -93,6 +91,9 @@ public class UnaryTransaction extends TransactionBase {
     public UnaryTransactionType getUnaryTransactionType() {
         return unary_type;
     }
+    public String getInitiator() {
+        return initiator;
+    }
     public boolean isDeposit() {
         return this.unary_type == UnaryTransactionType.DEPOSIT;
     }
@@ -101,8 +102,5 @@ public class UnaryTransaction extends TransactionBase {
     }
     public boolean isPurchase() {
         return this.unary_type == UnaryTransactionType.PURCHASE;
-    }
-    public boolean isAccrueInterest() {
-        return this.unary_type == UnaryTransactionType.ACCRUE_INTEREST;
     }
 }

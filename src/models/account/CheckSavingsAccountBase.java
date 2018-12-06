@@ -40,7 +40,6 @@ public class CheckSavingsAccountBase extends AccountBase {
 
     public static void addInterestToAllOpen(
             Connection conn,
-            String initiator, // customer tax_id
             boolean should_commit
     ) throws SQLException, IllegalArgumentException {
         if (AccountBase.hasInterestBeenAddedThisMonth(conn)) {
@@ -50,7 +49,6 @@ public class CheckSavingsAccountBase extends AccountBase {
         for (int account_id : account_ids) {
             TransactionFactory.createAccrueInterest(
                     conn,
-                    initiator,
                     account_id,
                     false // should_commit
             );

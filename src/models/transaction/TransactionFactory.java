@@ -2,6 +2,7 @@ package models.transaction;
 
 import models.*;
 import models.account.*;
+import models.transaction.*;
 import bank_util.*;
 import java.sql.*;
 
@@ -383,7 +384,6 @@ public class TransactionFactory {
                 0, // fee
                 initiator,
                 transactor,
-                CheckTransaction.CheckTransactionType.WRITE_CHECK,
                 false // should_commit
         );
         if (should_commit)
@@ -394,7 +394,6 @@ public class TransactionFactory {
 
     public static int createAccrueInterest(
             Connection conn,
-            String initiator, // customer tax_id
             int transactor, // check/savings account_id
             boolean should_commit
     ) throws SQLException, IllegalArgumentException {
@@ -407,14 +406,12 @@ public class TransactionFactory {
                 chk_savings_account.getBalance() + amount,
                 false // should_commit
         );
-        int t_id = UnaryTransaction.create(
+        int t_id = AccrueInterestTransaction.create(
                 conn,
                 amount,
                 timestamp,
                 0, // fee
-                initiator,
                 transactor,
-                UnaryTransaction.UnaryTransactionType.ACCRUE_INTEREST,
                 false // should_commit
         );
         if (should_commit)

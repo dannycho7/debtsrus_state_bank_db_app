@@ -35,6 +35,7 @@ public class BinaryTransaction extends TransactionBase {
         }
     }
 
+    protected String initiator;
     protected int operand;
     protected BinaryTransactionType binary_type;
 
@@ -53,12 +54,12 @@ public class BinaryTransaction extends TransactionBase {
                 amount,
                 timestamp,
                 fee,
-                initiator,
                 transactor,
                 binary_type.getCorrespondingTransactionType()
         );
         this.operand = operand;
         this.binary_type = binary_type;
+        this.initiator = initiator;
     }
 
     // returns: t_id
@@ -78,16 +79,16 @@ public class BinaryTransaction extends TransactionBase {
                 amount,
                 timestamp,
                 fee,
-                initiator,
                 transactor,
                 type.getCorrespondingTransactionType(),
                 false // should_commit
         ); // creates transaction base
 
         Statement stmt = conn.createStatement();
-        String sql = String.format("INSERT INTO Binary_transaction %s VALUES (%d, %d)"
-                , "(t_id, operand)"
+        String sql = String.format("INSERT INTO Binary_transaction %s VALUES (%d, '%s', %d)"
+                , "(t_id, initiator, operand)"
                 , t_id
+                , initiator
                 , operand
         );
         int n = stmt.executeUpdate(sql);
@@ -100,6 +101,9 @@ public class BinaryTransaction extends TransactionBase {
 
     public int getOperand() {
         return operand;
+    }
+    public String getInitiator() {
+        return initiator;
     }
     public BinaryTransactionType getBinaryTransactionType() {
         return binary_type;
