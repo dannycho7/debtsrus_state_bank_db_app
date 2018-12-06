@@ -1,5 +1,6 @@
 package models;
 
+import bank_util.*;
 import java.sql.*;
 import java.util.ArrayList;
 import models.account.*;
@@ -11,37 +12,37 @@ public class Customer {
    private String tax_id;
    private String name;
    private String address;
-   private String pin;
+   private String pin_digest;
 
    public Customer(
       String tax_id,
       String name,
       String address,
-      String pin
+      String pin_digest
    ) {
       this.tax_id = tax_id;
       this.name = name;
       this.address = address;
-      this.pin = pin;
+      this.pin_digest = pin_digest;
    }
 
    public static ArrayList<Customer> all(
            Connection conn
    ) throws SQLException {
        ArrayList<Customer> customers = new ArrayList<Customer>();
-       String get_customers_sql = "SELECT C.tax_id, C.name, C.address, C.pin FROM Customer C";
+       String get_customers_sql = "SELECT C.tax_id, C.name, C.address, C.pin_digest FROM Customer C";
        Statement stmt = conn.createStatement();
        ResultSet rs = stmt.executeQuery(get_customers_sql);
        while (rs.next()) {
            String tax_id = rs.getString("tax_id");
            String name = rs.getString("name");
            String address = rs.getString("address");
-           String pin = rs.getString("pin");
+           String pin_digest = rs.getString("pin_digest");
            Customer customer = new Customer(
                    tax_id,
                    name,
                    address,
-                   pin
+                   pin_digest
            );
            customers.add(customer);
        }
@@ -56,24 +57,21 @@ public class Customer {
       String pin,
       boolean should_commit
    ) throws SQLException {
-      Statement stmt = conn.createStatement();
-      Pin.create(
-              conn,
-              pin,
-              false // should_commit
-      );
-
-      String sql = String.format("INSERT INTO Customer %s VALUES ('%s', '%s', '%s', '%s')"
-                  , "(tax_id, name, address, pin)"
-                  , tax_id
-                  , name
-                  , address
-                  , pin
-      );
-      int n = stmt.executeUpdate(sql);
-      System.out.println(n + " rows affected");
-      if (should_commit)
-         conn.commit();
+       if (pin.length() != 4) {
+           throw new IllegalArgumentException("Pin must be of length 4");
+       }
+       Statement stmt = conn.createStatement();
+       String sql = String.format("INSERT INTO Customer %s VALUES ('%s', '%s', '%s', '%s')"
+               , "(tax_id, name, address, pin_digest)"
+               , tax_id
+               , name
+               , address
+               , BankUtil.getPinDigestForSQLInsert(pin)
+       );
+       int n = stmt.executeUpdate(sql);
+       System.out.println(n + " rows affected");
+       if (should_commit)
+          conn.commit();
    }
 
    public static void deleteAllWithNoAccounts(
@@ -97,7 +95,7 @@ public class Customer {
            String customer_tax_id
    ) throws SQLException, IllegalArgumentException {
       String get_customer_sql = String.format("SELECT %s FROM Customer C WHERE C.tax_id = %s "
-              , "C.tax_id, C.name, C.address, C.pin"
+              , "C.tax_id, C.name, C.address, C.pin_digest"
               , customer_tax_id
       );
 
@@ -107,13 +105,12 @@ public class Customer {
          String tax_id = rs.getString("tax_id");
          String name = rs.getString("name");
          String address = rs.getString("address");
-         String pin = rs.getString("pin");
-
+         String pin_digest = rs.getString("pin_digest");
          return new Customer(
                  tax_id,
                  name,
                  address,
-                 pin
+                 pin_digest
          );
       }
 
@@ -129,8 +126,8 @@ public class Customer {
    public String getAddress() {
       return address;
    }
-   public String getPin() {
-      return pin;
+   public String getPinDigest() {
+      return pin_digest;
    }
 
    public ArrayList<AccountBase> genAccounts(
@@ -196,5 +193,29 @@ public class Customer {
            }
        }
        return dter_customers;
+   }
+
+   public void setPin(
+           Connection conn,
+           String old_pin,
+           String new_pin
+   ) throws SQLException {
+       if (verifyPin(old_pin)) {
+           Statement stmt = conn.createStatement();
+           String sql = String.format("UPDATE Customer C SET C.pin_digest='%s' WHERE C.tax_id = '%s'"
+                   , BankUtil.getPinDigestForSQLInsert(new_pin)
+                   , tax_id
+           );
+           int n = stmt.executeUpdate(sql);
+           this.pin_digest = BankUtil.getPinDigest(new_pin);
+           System.out.println(n + " rows affected");
+       }
+   }
+
+   public boolean verifyPin(String pin) {
+       if (pin.length() != 4) {
+           throw new IllegalArgumentException("Pin must be of length 4");
+       }
+       return BankUtil.getPinDigest(pin).equals(pin_digest);
    }
 }

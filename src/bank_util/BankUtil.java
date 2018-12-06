@@ -1,6 +1,8 @@
 package bank_util;
 
 import java.util.Calendar;
+import java.security.*;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 
 abstract public class BankUtil {
@@ -19,6 +21,20 @@ abstract public class BankUtil {
     public static int getNumDaysInCurrentMonth() {
         Calendar calendar = Calendar.getInstance();
         return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+    public static String getPinDigest(String pin) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(pin.getBytes());
+            String pin_digest = new String(messageDigest.digest());
+            return pin_digest;
+        } catch (NoSuchAlgorithmException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Pin Digest algorithm is not working");
+        }
+    }
+    public static String getPinDigestForSQLInsert(String pin) {
+        return getPinDigest(pin).replaceAll("'", "''");
     }
     public static String getSQLTimeStamp() {
         java.util.Date uDate = new java.util.Date();

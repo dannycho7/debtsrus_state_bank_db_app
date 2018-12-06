@@ -271,7 +271,7 @@ public class AccountBase {
                         "FROM Customer C " +
                         "JOIN Account_ownership Ao ON C.tax_id = Ao.tax_id " +
                         "WHERE Ao.account_id = '%s'"
-                , "C.tax_id, C.name, C.address, C.pin"
+                , "C.tax_id, C.name, C.address, C.pin_digest"
                 , this.account_id
         );
         Statement stmt = conn.createStatement();
@@ -280,12 +280,12 @@ public class AccountBase {
             String tax_id = rs.getString("tax_id");
             String name = rs.getString("name");
             String address = rs.getString("address");
-            String pin = rs.getString("pin");
+            String pin_digest = rs.getString("pin_digest");
             Customer customer = new Customer(
                     tax_id,
                     name,
                     address,
-                    pin
+                    pin_digest
             );
             customers.add(customer);
         }

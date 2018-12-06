@@ -1,3 +1,2 @@
-INSERT INTO Pin (pin_no) VALUES ('0000');
 INSERT INTO Customer (tax_id, name, address, pin) VALUES ('000000000', 'admin', 'admin street', '0000');
 INSERT INTO Account (account_id, balance, closed, branch_name, type, primary_owner) VALUES (0, 500, 0, 'admin', 'pocket', '000000000');
