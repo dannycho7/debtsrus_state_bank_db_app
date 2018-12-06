@@ -6,13 +6,15 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 
 abstract public class BankUtil {
+    private static Calendar cal = Calendar.getInstance();
+
     public static String getCurrentMonthYear() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM-yyyy");
-        return simpleDateFormat.format(new java.util.Date());
+        return simpleDateFormat.format(cal.getTime());
     }
     public static String getCurrentYearMonth() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM");
-        return simpleDateFormat.format(new java.util.Date());
+        return simpleDateFormat.format(cal.getTime());
     }
     public static String getMoneyString(int cents) {
         int dollars = (int ) (cents / 100);
@@ -37,12 +39,16 @@ abstract public class BankUtil {
         return getPinDigest(pin).replaceAll("'", "''");
     }
     public static String getSQLTimeStamp() {
-        java.util.Date uDate = new java.util.Date();
+        java.util.Date uDate = cal.getTime();
         java.sql.Date sDate = new java.sql.Date(uDate.getTime());
         String timestamp = sDate.toString();
         return timestamp;
     }
     public static int getUUID() {
         return (int) (Math.random() * Integer.MAX_VALUE); // low chance of collision
+    }
+    public static void setCurrentDate(int year, int month, int date) {
+        // month is 0-indexed such that 0 => January and 11 => December
+        cal.set(year, month, date);
     }
 }

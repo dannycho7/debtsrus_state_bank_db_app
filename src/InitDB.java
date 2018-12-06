@@ -3,6 +3,7 @@ import models.*;
 import models.account.*;
 
 import java.sql.*;
+import java.util.Calendar;
 
 public class InitDB {
     public static void main(String[] args) {
@@ -47,10 +48,13 @@ public class InitDB {
 
             // TODO: Reorder these operations and figure out a way to programmatically change date
 
+            BankUtil.setCurrentDate(2011, Calendar.MARCH, 2);
             CheckingAccount.createForStudent(conn, 17431, 20000, "San Francisco", JOE_PEPSI_ID, new String[] {
                     CINDY_LAUGHER_ID,
                     IVAN_LENDME_ID
             }, IVAN_LENDME_ID, false);
+
+            BankUtil.setCurrentDate(2011, Calendar.MARCH, 3);
             CheckingAccount.createForStudent(conn, 54321, 2100000, "Los Angeles", HURRYSON_FORD_ID, new String[]{
                     CINDY_LAUGHER_ID,
                     ELIZABETH_SAILOR_ID,
@@ -62,9 +66,6 @@ public class InitDB {
                     FATAL_CASTRO_ID,
                     BILLY_CLINTON_ID
             }, GEORGE_BRUSH_ID, false);
-            CheckingAccount.createForInterest(conn, 76543, 845600, "Santa Barbara", LI_KUNG_ID, new String[] {
-                    MAGIC_JORDAN_ID
-            }, MAGIC_JORDAN_ID, false);
             CheckingAccount.createForInterest(conn, 93156, 200000000, "Goleta", KELVIN_COSTNER_ID, new String[] {
                     MAGIC_JORDAN_ID,
                     OLIVE_STONER_ID,
@@ -72,6 +73,8 @@ public class InitDB {
                     NAM_HOI_CHUNG_ID
             }, ELIZABETH_SAILOR_ID, false);
 
+            BankUtil.setCurrentDate(2011, Calendar.MARCH, 4);
+            PocketAccount.create(conn, 53027, 5000, "Goleta", DAVID_COPPERFILL_ID, new String[] {}, DAVID_COPPERFILL_ID, 12121, false);
             SavingsAccount.create(conn, 43942, 128900, "Santa Barbara", ALFRED_HITCHCOCK_ID, new String[] {
                     PIT_WILSON_ID,
                     HURRYSON_FORD_ID,
@@ -81,10 +84,17 @@ public class InitDB {
                     LI_KUNG_ID,
                     OLIVE_STONER_ID
             }, KELVIN_COSTNER_ID, false);
+
+            BankUtil.setCurrentDate(2011, Calendar.MARCH, 5);
             SavingsAccount.create(conn, 19023, 230000, "San Fransisco", CINDY_LAUGHER_ID, new String[] {
                     GEORGE_BRUSH_ID,
                     FATAL_CASTRO_ID
             }, CINDY_LAUGHER_ID, false);
+            PocketAccount.create(conn, 60413, 2000, "Santa Cruz", ALFRED_HITCHCOCK_ID, new String[] {
+                    PIT_WILSON_ID,
+                    ELIZABETH_SAILOR_ID,
+                    BILLY_CLINTON_ID
+            }, PIT_WILSON_ID, 43942, false);
             SavingsAccount.create(conn, 32156, 100000, "Goleta", MAGIC_JORDAN_ID, new String[] {
                     DAVID_COPPERFILL_ID,
                     ELIZABETH_SAILOR_ID,
@@ -92,25 +102,27 @@ public class InitDB {
                     NAM_HOI_CHUNG_ID,
                     OLIVE_STONER_ID
             }, JOE_PEPSI_ID, false);
-
-            PocketAccount.create(conn, 53027, 5000, "Goleta", DAVID_COPPERFILL_ID, new String[] {}, DAVID_COPPERFILL_ID, 12121, false);
+            CheckingAccount.createForInterest(conn, 76543, 845600, "Santa Barbara", LI_KUNG_ID, new String[] {
+                    MAGIC_JORDAN_ID
+            }, MAGIC_JORDAN_ID, false);
             PocketAccount.create(conn, 43947, 3000, "Isla Vista", LI_KUNG_ID, new String[] {
                     OLIVE_STONER_ID
             }, LI_KUNG_ID, 29107, false);
-            PocketAccount.create(conn, 60413, 2000, "Santa Cruz", ALFRED_HITCHCOCK_ID, new String[] {
-                    PIT_WILSON_ID,
-                    ELIZABETH_SAILOR_ID,
-                    BILLY_CLINTON_ID
-            }, PIT_WILSON_ID, 43942, false);
+
+            BankUtil.setCurrentDate(2011, Calendar.MARCH, 6);
             PocketAccount.create(conn, 67521, 10000, "Santa Barbara", KELVIN_COSTNER_ID, new String[] {
                     FATAL_CASTRO_ID,
                     HURRYSON_FORD_ID
             }, FATAL_CASTRO_ID, 19023, false);
 
+            conn.commit();
+            /*
             System.out.println("Rolling back..");
             JDBCConnectionManager.rollbackConn(conn);
-        } catch (SQLException se) {
+            */
+        } catch (Exception se) {
             se.printStackTrace();
+            System.out.println("Rolling back...");
             JDBCConnectionManager.rollbackConn(conn);
         } finally {
             JDBCConnectionManager.closeConnection(
