@@ -46,6 +46,8 @@ public class Customer {
            );
            customers.add(customer);
        }
+       rs.close();
+       stmt.close();
        return customers;
    }
 
@@ -106,6 +108,8 @@ public class Customer {
          String name = rs.getString("name");
          String address = rs.getString("address");
          String pin_digest = rs.getString("pin_digest");
+         rs.close();
+         stmt.close();
          return new Customer(
                  tax_id,
                  name,
@@ -113,7 +117,6 @@ public class Customer {
                  pin_digest
          );
       }
-
       throw new IllegalArgumentException(String.format("Could not find Customer %s", customer_tax_id));
    }
 
@@ -162,6 +165,8 @@ public class Customer {
 
          accounts.add(account);
       }
+      rs.close();
+      stmt.close();
       return accounts;
    }
 

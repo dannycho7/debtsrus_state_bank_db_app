@@ -119,7 +119,8 @@ public class CheckSavingsAccountBase extends AccountBase {
             String branch_name = rs.getString("branch_name");
             AccountType type = AccountBase.AccountType.fromString(rs.getString("type"));
             String primary_owner = rs.getString("primary_owner");
-
+            rs.close();
+            stmt.close();
             return new CheckSavingsAccountBase(
                     chk_savings_account_id,
                     balance,
@@ -129,7 +130,8 @@ public class CheckSavingsAccountBase extends AccountBase {
                     primary_owner
             );
         }
-
+        rs.close();
+        stmt.close();
         throw new IllegalArgumentException(String.format("Could not find CheckSavingsAccount %s", account_id));
     }
 
@@ -177,6 +179,8 @@ public class CheckSavingsAccountBase extends AccountBase {
             int account_id = rs.getInt("account_id");
             account_ids.add(account_id);
         }
+        rs.close();
+        stmt.close();
         return account_ids;
     }
 
@@ -192,8 +196,12 @@ public class CheckSavingsAccountBase extends AccountBase {
         ResultSet rs = stmt.executeQuery(get_account_type_sql);
         while (rs.next()) {
             double interest_rate = rs.getDouble("interest_rate");
+            rs.close();
+            stmt.close();
             return interest_rate;
         }
+        rs.close();
+        stmt.close();
         throw new IllegalArgumentException("No such account type exists");
     }
 

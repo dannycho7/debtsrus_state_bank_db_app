@@ -39,13 +39,17 @@ public class PocketAccount extends AccountBase {
                   , initiator);
       Statement stmt = conn.createStatement();
       ResultSet rs = stmt.executeQuery(sql);
+      boolean is_valid = false;
       while (rs.next()) {
          String account_type = rs.getString("type");
          if (valid_linked_account_types.contains(account_type)) {
-            return true;
+             is_valid = true;
+             break;
          }
       }
-      return false;
+      rs.close();
+      stmt.close();
+      return is_valid;
    }
 
    public static void create(
@@ -116,6 +120,8 @@ public class PocketAccount extends AccountBase {
            String primary_owner = rs.getString("primary_owner");
            int linked_account_id = rs.getInt("link");
 
+           rs.close();
+           stmt.close();
            return new PocketAccount(
                    pocket_account_id,
                    balance,
@@ -126,7 +132,8 @@ public class PocketAccount extends AccountBase {
                    linked_account_id
            );
        }
-
+       rs.close();
+       stmt.close();
        throw new IllegalArgumentException(String.format("Could not find PocketAccount %s", account_id));
    }
 
@@ -160,10 +167,14 @@ public class PocketAccount extends AccountBase {
        );
        Statement stmt = conn.createStatement();
        ResultSet rs = stmt.executeQuery(find_transaction_sql);
+       boolean has_transaction = false;
        while (rs.next()) {
-           return true;
+           has_transaction = true;
+           break;
        }
-       return false;
+       rs.close();
+       stmt.close();
+       return has_transaction;
    }
 
     public void updateBalance(

@@ -57,6 +57,8 @@ public class AccountCloseHistory {
 
             accounts.add(account);
         }
+        rs.close();
+        stmt.close();
         return accounts;
     }
 

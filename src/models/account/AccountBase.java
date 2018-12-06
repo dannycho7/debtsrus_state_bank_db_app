@@ -255,6 +255,8 @@ public class AccountBase {
            );
            delta_per_day[day - 1] += delta;
        }
+       rs.close();
+       stmt.close();
        return delta_per_day;
    }
 
@@ -297,6 +299,8 @@ public class AccountBase {
             );
             customers.add(customer);
         }
+        rs.close();
+        stmt.close();
         return customers;
     }
 
@@ -330,6 +334,8 @@ public class AccountBase {
             );
             accrue_interest_transactions.add(accrue_interest_transaction);
         }
+        rs.close();
+        stmt.close();
         return accrue_interest_transactions;
     }
 
@@ -369,6 +375,8 @@ public class AccountBase {
             );
             binary_transactions.add(binary_transaction);
         }
+        rs.close();
+        stmt.close();
         return binary_transactions;
     }
 
@@ -406,6 +414,8 @@ public class AccountBase {
             );
             check_transactions.add(check_transaction);
         }
+        rs.close();
+        stmt.close();
         return check_transactions;
     }
 
@@ -443,6 +453,8 @@ public class AccountBase {
             );
             unary_transactions.add(unary_transaction);
         }
+        rs.close();
+        stmt.close();
         return unary_transactions;
     }
 
@@ -457,11 +469,15 @@ public class AccountBase {
         );
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(find_interest_sql);
+        boolean has_interest = false;
         while (rs.next()) {
             int t_id = rs.getInt("t_id");
-            return true;
+            has_interest = true;
+            break;
         }
-        return false;
+        rs.close();
+        stmt.close();
+        return has_interest;
     }
 
     public boolean hasOwner(
@@ -476,12 +492,16 @@ public class AccountBase {
         );
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(find_owner_sql);
+        boolean has_owner = false;
         while (rs.next()) {
             String tax_id = rs.getString("tax_id");
             int account_id = rs.getInt("account_id");
-            return true;
+            has_owner = true;
+            break;
         }
-        return false;
+        rs.close();
+        stmt.close();
+        return has_owner;
     }
 
     protected void updateBalance(
