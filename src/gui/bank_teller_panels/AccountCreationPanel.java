@@ -83,6 +83,8 @@ public class AccountCreationPanel extends Panel {
         AccountType acct_type = AccountType.fromString((String) account_type_list.getSelectedItem());
         String primary_owner = primary_owner_field.getText();
         String initiator = initiator_field.getText();
+        String comma_sep_owners = owners_field.getText().replaceAll(" ", "");
+        String[] owners = comma_sep_owners.length() == 0 ? new String[0] : comma_sep_owners.split(",");
 
         switch (acct_type) {
             case STUDENT_CHECKING:
@@ -92,6 +94,7 @@ public class AccountCreationPanel extends Panel {
                         balance,
                         branch_name,
                         primary_owner,
+                        owners,
                         initiator,
                         false // should_commit
                 );
@@ -103,6 +106,7 @@ public class AccountCreationPanel extends Panel {
                         balance,
                         branch_name,
                         primary_owner,
+                        owners,
                         initiator,
                         false // should_commit
                 );
@@ -114,6 +118,7 @@ public class AccountCreationPanel extends Panel {
                         balance,
                         branch_name,
                         primary_owner,
+                        owners,
                         initiator,
                         false // should_commit
                 );
@@ -126,6 +131,7 @@ public class AccountCreationPanel extends Panel {
                         balance,
                         branch_name,
                         primary_owner,
+                        owners,
                         initiator,
                         linked_account_id,
                         false // should_commit
@@ -133,17 +139,6 @@ public class AccountCreationPanel extends Panel {
                 break;
             default:
                 System.out.println("Inexhaustive case");
-        }
-
-        String comma_sep_owners = owners_field.getText().replaceAll(" ", "");
-        String[] owners = comma_sep_owners.length() == 0 ? new String[0] : comma_sep_owners.split(",");
-        for (String owner : owners) {
-            AccountBase.createAccountOwnership(
-                    conn,
-                    owner,
-                    account_id,
-                    false // should_commit
-            );
         }
     }
 

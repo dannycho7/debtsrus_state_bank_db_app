@@ -27,6 +27,7 @@ public class SavingsAccount extends CheckSavingsAccountBase {
       int balance, // $$ in cents
       String branch_name,
       String customer_tax_id,
+      String[] other_owners,
       String initiator,
       boolean should_commit
    ) throws SQLException {
@@ -37,6 +38,7 @@ public class SavingsAccount extends CheckSavingsAccountBase {
               branch_name,
               CheckSavingsAccountType.SAVINGS,
               customer_tax_id,
+              other_owners,
               initiator,
               false // should_commit
       ); // creates account base

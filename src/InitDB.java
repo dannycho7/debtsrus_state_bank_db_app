@@ -34,7 +34,7 @@ public class InitDB {
             String DAVID_COPPERFILL_ID = "207843218";
             String ELIZABETH_SAILOR_ID = "122219876";
             String FATAL_CASTRO_ID = "401605312";
-            String GEORGE_BUSH_ID = "201674933";
+            String GEORGE_BRUSH_ID = "201674933";
             String HURRYSON_FORD_ID = "212431965";
             String IVAN_LENDME_ID = "322175130";
             String JOE_PEPSI_ID = "344151573";
@@ -47,26 +47,68 @@ public class InitDB {
 
             // TODO: Reorder these operations and figure out a way to programmatically change date
 
-            CheckingAccount.createForStudent(conn, 17431, 20000, "San Francisco", JOE_PEPSI_ID, IVAN_LENDME_ID, false);
-            CheckingAccount.createForStudent(conn, 54321, 2100000, "Los Angeles", HURRYSON_FORD_ID, HURRYSON_FORD_ID, false);
-            CheckingAccount.createForStudent(conn, 12121, 120000, "Goleta", DAVID_COPPERFILL_ID, DAVID_COPPERFILL_ID, false);
+            CheckingAccount.createForStudent(conn, 17431, 20000, "San Francisco", JOE_PEPSI_ID, new String[] {
+                    CINDY_LAUGHER_ID,
+                    IVAN_LENDME_ID
+            }, IVAN_LENDME_ID, false);
+            CheckingAccount.createForStudent(conn, 54321, 2100000, "Los Angeles", HURRYSON_FORD_ID, new String[]{
+                    CINDY_LAUGHER_ID,
+                    ELIZABETH_SAILOR_ID,
+                    NAM_HOI_CHUNG_ID
+            }, HURRYSON_FORD_ID, false);
+            CheckingAccount.createForStudent(conn, 12121, 120000, "Goleta", DAVID_COPPERFILL_ID, new String[] {}, DAVID_COPPERFILL_ID, false);
 
-            CheckingAccount.createForInterest(conn, 41725, 1500000, "Los Angeles", GEORGE_BUSH_ID, GEORGE_BUSH_ID, false);
-            CheckingAccount.createForInterest(conn, 76543, 845600, "Santa Barbara", LI_KUNG_ID, MAGIC_JORDAN_ID, false);
-            CheckingAccount.createForInterest(conn, 93156, 200000000, "Goleta", KELVIN_COSTNER_ID, ELIZABETH_SAILOR_ID, false);
+            CheckingAccount.createForInterest(conn, 41725, 1500000, "Los Angeles", GEORGE_BRUSH_ID, new String[] {
+                    FATAL_CASTRO_ID,
+                    BILLY_CLINTON_ID
+            }, GEORGE_BRUSH_ID, false);
+            CheckingAccount.createForInterest(conn, 76543, 845600, "Santa Barbara", LI_KUNG_ID, new String[] {
+                    MAGIC_JORDAN_ID
+            }, MAGIC_JORDAN_ID, false);
+            CheckingAccount.createForInterest(conn, 93156, 200000000, "Goleta", KELVIN_COSTNER_ID, new String[] {
+                    MAGIC_JORDAN_ID,
+                    OLIVE_STONER_ID,
+                    ELIZABETH_SAILOR_ID,
+                    NAM_HOI_CHUNG_ID
+            }, ELIZABETH_SAILOR_ID, false);
 
-            SavingsAccount.create(conn, 43942, 128900, "Santa Barbara", ALFRED_HITCHCOCK_ID, HURRYSON_FORD_ID, false);
-            SavingsAccount.create(conn, 29107, 3400000, "Los Angeles", KELVIN_COSTNER_ID, KELVIN_COSTNER_ID, false);
-            SavingsAccount.create(conn, 19023, 230000, "San Fransisco", CINDY_LAUGHER_ID, CINDY_LAUGHER_ID, false);
-            SavingsAccount.create(conn, 32156, 100000, "Goleta", MAGIC_JORDAN_ID, JOE_PEPSI_ID, false);
+            SavingsAccount.create(conn, 43942, 128900, "Santa Barbara", ALFRED_HITCHCOCK_ID, new String[] {
+                    PIT_WILSON_ID,
+                    HURRYSON_FORD_ID,
+                    IVAN_LENDME_ID
+            }, HURRYSON_FORD_ID, false);
+            SavingsAccount.create(conn, 29107, 3400000, "Los Angeles", KELVIN_COSTNER_ID, new String[] {
+                    LI_KUNG_ID,
+                    OLIVE_STONER_ID
+            }, KELVIN_COSTNER_ID, false);
+            SavingsAccount.create(conn, 19023, 230000, "San Fransisco", CINDY_LAUGHER_ID, new String[] {
+                    GEORGE_BRUSH_ID,
+                    FATAL_CASTRO_ID
+            }, CINDY_LAUGHER_ID, false);
+            SavingsAccount.create(conn, 32156, 100000, "Goleta", MAGIC_JORDAN_ID, new String[] {
+                    DAVID_COPPERFILL_ID,
+                    ELIZABETH_SAILOR_ID,
+                    JOE_PEPSI_ID,
+                    NAM_HOI_CHUNG_ID,
+                    OLIVE_STONER_ID
+            }, JOE_PEPSI_ID, false);
 
-            PocketAccount.create(conn, 53027, 5000, "Goleta", DAVID_COPPERFILL_ID, DAVID_COPPERFILL_ID, 12121, false);
-            PocketAccount.create(conn, 43947, 3000, "Isla Vista", LI_KUNG_ID, LI_KUNG_ID, 29107, false);
-            PocketAccount.create(conn, 60413, 2000, "Santa Cruz", ALFRED_HITCHCOCK_ID, PIT_WILSON_ID, 43942, false);
-            PocketAccount.create(conn, 67521, 10000, "Santa Barbara", KELVIN_COSTNER_ID, FATAL_CASTRO_ID, 19023, false);
+            PocketAccount.create(conn, 53027, 5000, "Goleta", DAVID_COPPERFILL_ID, new String[] {}, DAVID_COPPERFILL_ID, 12121, false);
+            PocketAccount.create(conn, 43947, 3000, "Isla Vista", LI_KUNG_ID, new String[] {
+                    OLIVE_STONER_ID
+            }, LI_KUNG_ID, 29107, false);
+            PocketAccount.create(conn, 60413, 2000, "Santa Cruz", ALFRED_HITCHCOCK_ID, new String[] {
+                    PIT_WILSON_ID,
+                    ELIZABETH_SAILOR_ID,
+                    BILLY_CLINTON_ID
+            }, PIT_WILSON_ID, 43942, false);
+            PocketAccount.create(conn, 67521, 10000, "Santa Barbara", KELVIN_COSTNER_ID, new String[] {
+                    FATAL_CASTRO_ID,
+                    HURRYSON_FORD_ID
+            }, FATAL_CASTRO_ID, 19023, false);
 
             System.out.println("Rolling back..");
-            conn.rollback();
+            JDBCConnectionManager.rollbackConn(conn);
         } catch (SQLException se) {
             se.printStackTrace();
             JDBCConnectionManager.rollbackConn(conn);

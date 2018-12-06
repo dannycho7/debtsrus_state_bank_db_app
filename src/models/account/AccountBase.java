@@ -108,6 +108,7 @@ public class AccountBase {
       String branch_name,
       AccountType acct_type,
       String customer_tax_id,
+      String[] other_owners,
       boolean should_commit
    ) throws SQLException {
       Statement stmt = conn.createStatement();
@@ -129,6 +130,14 @@ public class AccountBase {
               account_id,
               false // should_commit
       );
+       for (String owner : other_owners) {
+           AccountBase.createAccountOwnership(
+                   conn,
+                   owner,
+                   account_id,
+                   false // should_commit
+           );
+       }
       if (should_commit)
           conn.commit();
    }

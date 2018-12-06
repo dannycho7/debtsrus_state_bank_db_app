@@ -54,6 +54,7 @@ public class PocketAccount extends AccountBase {
       int balance, // $$ in cents
       String branch_name,
       String customer_tax_id,
+      String[] other_owners,
       String initiator,
       int linked_account_id,
       boolean should_commit
@@ -68,6 +69,7 @@ public class PocketAccount extends AccountBase {
          branch_name,
          AccountType.POCKET,
          customer_tax_id,
+         other_owners,
          false // should_commit
       ); // creates account base
       Statement stmt = conn.createStatement();

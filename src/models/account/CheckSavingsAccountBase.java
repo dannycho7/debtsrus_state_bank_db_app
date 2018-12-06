@@ -64,6 +64,7 @@ public class CheckSavingsAccountBase extends AccountBase {
             String branch_name,
             CheckSavingsAccountType check_savings_account_type,
             String customer_tax_id,
+            String[] other_owners,
             String initiator,
             boolean should_commit
     ) throws SQLException {
@@ -77,6 +78,7 @@ public class CheckSavingsAccountBase extends AccountBase {
                 branch_name,
                 check_savings_account_type.getCorrespondingAccountType(),
                 customer_tax_id,
+                other_owners,
                 false // should_commit
         ); // creates account base
         Statement stmt = conn.createStatement();
