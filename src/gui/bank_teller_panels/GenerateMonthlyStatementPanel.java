@@ -61,7 +61,7 @@ public class GenerateMonthlyStatementPanel extends Panel {
                         break;
                     case COLLECT:
                         transaction_format_string = "(Collect, Fee %s) " +
-                                "Moved %s from Check/Savings account %d to Pocket Account %d on %s";
+                                "Moved %s to Check/Savings account %d from Pocket Account %d on %s";
                         break;
                     case PAY_FRIEND:
                         transaction_format_string = "(Pay-Friend, Fee %s) " +
@@ -88,7 +88,7 @@ public class GenerateMonthlyStatementPanel extends Panel {
                 switch (unary_transaction.getUnaryTransactionType()) {
                     case DEPOSIT:
                         transaction_format_string = "(Deposit, Fee %s) " +
-                                "Added %s from Check/Savings Account %d on %s";
+                                "Added %s to Check/Savings Account %d on %s";
                         break;
                     case WITHDRAWAL:
                         transaction_format_string = "(Withdrawal, Fee %s) " +
@@ -96,7 +96,7 @@ public class GenerateMonthlyStatementPanel extends Panel {
                         break;
                     case PURCHASE:
                         transaction_format_string = "(Purchase, Fee %s) " +
-                                "Added %s to PocketAccount %d on %s";
+                                "Subtracted %s from PocketAccount %d on %s";
                         break;
                 }
                 String transaction_msg = String.format(
