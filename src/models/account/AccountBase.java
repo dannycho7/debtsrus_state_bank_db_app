@@ -374,7 +374,7 @@ public class AccountBase {
     ) throws SQLException, IllegalArgumentException {
         String get_unary_transactions_this_month_sql = String.format("SELECT %s " +
                         "FROM Transaction T " +
-                        "JOIN Unary_transaction Ut ON T.t_id = Ct.t_id " +
+                        "JOIN Unary_transaction Ut ON T.t_id = Ut.t_id " +
                         "WHERE TO_CHAR(T.timestamp, 'MM-YYYY') = '%s' AND T.transactor = %d "
                 , "T.t_id, T.amount, T.timestamp, T.fee, T.initiator, T.transactor, T.type"
                 , BankUtil.getCurrentMonthYear()
