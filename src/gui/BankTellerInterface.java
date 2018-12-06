@@ -16,10 +16,15 @@ import java.util.ArrayList;
 public class BankTellerInterface extends JPanel{
     private Connection conn;
 
+    private JLabel current_date_label;
+
     public BankTellerInterface(Connection conn) {
         this.conn = conn;
+        current_date_label = new JLabel(BankUtil.getSQLTimeStamp());
         this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.add(new JLabel("Bank Teller Interface"));
+        this.add(current_date_label);
+        this.add(getDateButton());
         this.add(getAddAccountButton());
         this.add(getWriteCheckButton());
         this.add(getAddInterestButton());
@@ -29,6 +34,22 @@ public class BankTellerInterface extends JPanel{
         this.add(getGenerateMonthlyStatementsButton());
         this.add(getCustomerReportButton());
         this.add(getGenerateGovernmentDTERButton());
+    }
+
+    public void changeDate(int year, int month, int day) {
+        BankUtil.setCurrentDate(year, month - 1, day); // month is 0-indexed
+        current_date_label.setText(BankUtil.getSQLTimeStamp());
+    }
+
+    public JButton getDateButton() {
+        BankTellerInterface bank_teller = this;
+        JButton change_date_btn = new JButton("Change Date");
+        change_date_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                DatePanel.openDateDialog(conn, bank_teller);
+            }
+        });
+        return change_date_btn;
     }
 
     public JButton getAddAccountButton() {
@@ -169,7 +190,7 @@ public class BankTellerInterface extends JPanel{
                     JTextArea monthly_statement = new JTextArea();
                     monthly_statement.setEditable(false);
                     for (Customer customer : qualified_customers) {
-                        monthly_statement.append(String.format("Customer tax id: %s", customer.getTaxId()));
+                        monthly_statement.append(String.format("Customer tax id: %s\n", customer.getTaxId()));
                     }
                     JScrollPane scroll_pane = new JScrollPane(monthly_statement);
                     scroll_pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
